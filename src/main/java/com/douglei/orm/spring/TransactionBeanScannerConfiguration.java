@@ -43,12 +43,17 @@ public class TransactionBeanScannerConfiguration implements BeanDefinitionRegist
 			transactionClass = tc.getTransactionClass();
 			definition = (GenericBeanDefinition) BeanDefinitionBuilder.genericBeanDefinition(transactionClass).getRawBeanDefinition();
 			
+			// 将参数传递给TransactionBeanFactory类的构造函数
 			definition.getConstructorArgumentValues().addGenericArgumentValue(transactionClass);
 			definition.getConstructorArgumentValues().addGenericArgumentValue(tc.getTransactionAnnotationMethods());
 			
+			// 设置该bean的class为TransactionBeanFactory类
 			definition.setBeanClass(TransactionBeanFactory.class);
 			
+			// 设置根据类型注入
 			definition.setAutowireMode(GenericBeanDefinition.AUTOWIRE_BY_TYPE);
+			
+			// 将bean注入到spring容器中
 			registry.registerBeanDefinition(transactionClass.getSimpleName(), definition);
 		}
 	}

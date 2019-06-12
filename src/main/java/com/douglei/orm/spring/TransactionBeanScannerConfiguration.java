@@ -10,7 +10,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
 import com.douglei.orm.context.TransactionAnnotationMemoryUsage;
-import com.douglei.orm.context.TransactionClass;
+import com.douglei.orm.context.TransactionProxyEntity;
 import com.douglei.tools.utils.StringUtil;
 
 /**
@@ -35,12 +35,12 @@ public class TransactionBeanScannerConfiguration implements BeanDefinitionRegist
 
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-		List<TransactionClass> transactionClasses = TransactionAnnotationMemoryUsage.scanTransactionAnnotation(transactionPackage);
+		List<TransactionProxyEntity> transactionProxyEntities = TransactionAnnotationMemoryUsage.scanTransactionAnnotation(transactionPackage);
 		
 		Class<?> transactionClass = null;
 		GenericBeanDefinition definition = null;
-		for (TransactionClass tc : transactionClasses) {
-			transactionClass = tc.getTransactionClass();
+		for (TransactionProxyEntity transactionProxyEntity : transactionProxyEntities) {
+			transactionClass = transactionProxyEntity.getTransactionClass();
 			definition = new GenericBeanDefinition();
 			
 			// 设置该bean的class为TransactionBeanFactory类
@@ -48,7 +48,7 @@ public class TransactionBeanScannerConfiguration implements BeanDefinitionRegist
 			
 			// 将参数传递给TransactionBeanFactory类的构造函数
 			definition.getConstructorArgumentValues().addGenericArgumentValue(transactionClass);
-			definition.getConstructorArgumentValues().addGenericArgumentValue(tc.getTransactionAnnotationMethods());
+			definition.getConstructorArgumentValues().addGenericArgumentValue(transactionProxyEntity.getTransactionAnnotationMethods());
 			
 			// 设置根据类型注入
 			definition.setAutowireMode(GenericBeanDefinition.AUTOWIRE_BY_TYPE);

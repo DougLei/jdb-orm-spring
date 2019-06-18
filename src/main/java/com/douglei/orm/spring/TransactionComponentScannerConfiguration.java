@@ -47,7 +47,7 @@ public class TransactionComponentScannerConfiguration implements BeanDefinitionR
 			definition = new GenericBeanDefinition();
 			
 			// 设置该bean的class为TransactionBeanFactory类
-			definition.setBeanClass(TransactionComponentBeanFactory.class);
+			definition.setBeanClass(TransactionComponentProxyBeanFactory.class);
 			
 			// 将参数传递给TransactionBeanFactory类的构造函数
 			definition.getConstructorArgumentValues().addGenericArgumentValue(transactionClass);

@@ -12,12 +12,12 @@ import com.douglei.orm.context.TransactionProxyInterceptor;
  * 
  * @author DougLei
  */
-public class TransactionComponentBeanFactory<T> implements FactoryBean<T> {
+public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T> {
 	
 	private Class<T> transactionComponentProxyBeanClass;
 	private List<Method> transactionMethods;
 	
-	public TransactionComponentBeanFactory(Class<T> transactionComponentProxyBeanClass, List<Method> transactionMethods) {
+	public TransactionComponentProxyBeanFactory(Class<T> transactionComponentProxyBeanClass, List<Method> transactionMethods) {
 		this.transactionComponentProxyBeanClass = transactionComponentProxyBeanClass;
 		this.transactionMethods = transactionMethods;
 	}

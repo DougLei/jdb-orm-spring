@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans 
+						http://www.springframework.org/schema/beans/spring-beans.xsd
+						">
+	<description>spring配置文件整合jdb-orm配置实例</description>
+	
+	<!-- **必须配置** -->
+	<!-- 配置数据源, 获取SessionFactoryHandlerHolder实例 -->
+	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryHandlerHolder" scope="singleton">
+		<!-- 必须配置默认的数据源 -->
+		<property name="defaultSessionFactoryConfigurationFile" value="jdb-orm.conf.xml"></property>
+		
+		<!--
+		配置多数据源, 非必须配置
+		<property name="sessionFactoryConfigurationFile">
+			<array>
+				<value>xxx.xml</value>
+				<value>xxx.xml</value>
+			</array>
+		</property>
+		-->
+	</bean>
+	
+	<!-- **必须配置** -->
+	<!-- 配置扫描@Transaction注解的对象 -->
+	<bean id="transactionBeanScannerConfiguration" class="com.douglei.orm.spring.TransactionBeanScannerConfiguration" scope="singleton">
+		<!-- 指定要扫描的base package路径 -->
+		<property name="transactionBasePackages">
+			<array>
+				<value>com.douglei.services</value>
+				<value>com.douglei.xxx.services</value>
+			</array>
+		</property>
+	</bean>
+	
+</beans>

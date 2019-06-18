@@ -11,7 +11,6 @@ import org.springframework.beans.factory.support.GenericBeanDefinition;
 
 import com.douglei.orm.context.TransactionAnnotationMemoryUsage;
 import com.douglei.orm.context.TransactionProxyEntity;
-import com.douglei.tools.utils.StringUtil;
 
 /**
  * Transaction Bean的扫描器配置对象
@@ -22,7 +21,7 @@ public class TransactionBeanScannerConfiguration implements BeanDefinitionRegist
 	/**
 	 * 要扫描@Transaction的根包路径
 	 */
-	private String transactionBasePackage;
+	private String[] transactionBasePackages;
 	 
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
@@ -32,14 +31,14 @@ public class TransactionBeanScannerConfiguration implements BeanDefinitionRegist
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if(StringUtil.isEmpty(transactionBasePackage)) {
+		if(transactionBasePackages == null || transactionBasePackages.length == 0) {
 			throw new NullPointerException(getClass().getName() + " 中的transactionBasePackage属性值不能为空");
 		}
 	}
 
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-		List<TransactionProxyEntity> transactionProxyEntities = TransactionAnnotationMemoryUsage.scanTransactionAnnotation(transactionBasePackage);
+		List<TransactionProxyEntity> transactionProxyEntities = TransactionAnnotationMemoryUsage.scanTransactionAnnotation(transactionBasePackages);
 		
 		Class<?> transactionClass = null;
 		GenericBeanDefinition definition = null;
@@ -62,7 +61,7 @@ public class TransactionBeanScannerConfiguration implements BeanDefinitionRegist
 		}
 	}
 	
-	public void setTransactionBasePackage(String transactionBasePackage) {
-		this.transactionBasePackage = transactionBasePackage;
+	public void setTransactionBasePackages(String[] transactionBasePackages) {
+		this.transactionBasePackages = transactionBasePackages;
 	}
 }

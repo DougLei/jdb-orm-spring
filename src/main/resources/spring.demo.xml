@@ -11,27 +11,23 @@
 			com.douglei.orm.spring.SessionFactoryRegisterHolder, 直接调用该类的静态方法 getSessionFactoryRegister()
 	-->
 	
-	<!-- **必须配置** -->
 	<!-- 配置数据源, 获取SessionFactoryHandlerHolder实例 -->
-	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryRegisterHolder" scope="singleton">
-		<property name="defaultSessionFactoryConfigurationFile" value="jdb-orm.conf.xml"></property>
+	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryRegisterHolder" scope="singleton"><!-- 必须配置 -->
+		<property name="defaultSessionFactoryConfigurationFile" value="jdb-orm.conf.xml"></property><!-- 必须配置 -->
 		
-		<!--
-		配置多数据源, 非必须配置
+		<!-- 配置多数据源, 非必须配置 -->
 		<property name="sessionFactoryConfigurationFiles">
 			<array>
 				<value>xxx.xml</value>
 				<value>xxx.xml</value>
 			</array>
 		</property>
-		-->
 	</bean>
 	
-	<!-- **必须配置** -->
 	<!-- 配置扫描@Transaction注解的实例 -->
-	<bean id="transactionBeanScannerConfiguration" class="com.douglei.orm.spring.TransactionBeanScannerConfiguration" scope="singleton">
+	<bean id="transactionBeanScannerConfiguration" class="com.douglei.orm.spring.TransactionBeanScannerConfiguration" scope="singleton"><!-- 必须配置 -->
 		<!-- 指定要扫描的base package路径 -->
-		<property name="transactionBasePackages">
+		<property name="transactionBasePackages"><!-- 必须配置 -->
 			<array>
 				<value>com.douglei.services</value>
 				<value>com.douglei.xxx.services</value>

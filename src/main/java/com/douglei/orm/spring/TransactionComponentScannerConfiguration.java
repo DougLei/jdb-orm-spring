@@ -16,12 +16,12 @@ import com.douglei.orm.context.TransactionProxyEntity;
  * Transaction Bean的扫描器配置对象
  * @author DougLei
  */
-public class TransactionBeanScannerConfiguration implements BeanDefinitionRegistryPostProcessor, InitializingBean{
+public class TransactionComponentScannerConfiguration implements BeanDefinitionRegistryPostProcessor, InitializingBean{
 	
 	/**
 	 * 要扫描@Transaction的根包路径
 	 */
-	private String[] transactionBasePackages;
+	private String[] transactionComponentPackages;
 	 
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
@@ -31,14 +31,14 @@ public class TransactionBeanScannerConfiguration implements BeanDefinitionRegist
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if(transactionBasePackages == null || transactionBasePackages.length == 0) {
-			throw new NullPointerException(getClass().getName() + " 中的transactionBasePackage属性值不能为空");
+		if(transactionComponentPackages == null || transactionComponentPackages.length == 0) {
+			throw new NullPointerException(getClass().getName() + " 中的transactionComponentPackages属性值不能为空");
 		}
 	}
 
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-		List<TransactionProxyEntity> transactionProxyEntities = TransactionAnnotationMemoryUsage.scanTransactionAnnotation(transactionBasePackages);
+		List<TransactionProxyEntity> transactionProxyEntities = TransactionAnnotationMemoryUsage.scanTransactionComponent(transactionComponentPackages);
 		
 		Class<?> transactionClass = null;
 		GenericBeanDefinition definition = null;
@@ -61,7 +61,7 @@ public class TransactionBeanScannerConfiguration implements BeanDefinitionRegist
 		}
 	}
 	
-	public void setTransactionBasePackages(String[] transactionBasePackages) {
-		this.transactionBasePackages = transactionBasePackages;
+	public void setTransactionComponentPackages(String[] transactionComponentPackages) {
+		this.transactionComponentPackages = transactionComponentPackages;
 	}
 }

@@ -8,13 +8,13 @@
 	
 	<!-- **必须配置** -->
 	<!-- 配置数据源, 获取SessionFactoryHandlerHolder实例 -->
-	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryHandlerHolder" scope="singleton">
-		<!-- 必须配置默认的数据源 -->
-		<property name="defaultSessionFactoryConfigurationFile" value="jdb-orm.conf.xml"></property>
+	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryRegisterHolder" scope="singleton">
+		<!-- 配置默认的数据源 , 如果不配置, 则使用默认值 jdb-orm.conf.xml-->
+		<property name="defaultSessionFactoryConfigurationFile" value="user.defined.conf.xml"></property>
 		
 		<!--
 		配置多数据源, 非必须配置
-		<property name="sessionFactoryConfigurationFile">
+		<property name="sessionFactoryConfigurationFiles">
 			<array>
 				<value>xxx.xml</value>
 				<value>xxx.xml</value>
@@ -24,7 +24,7 @@
 	</bean>
 	
 	<!-- **必须配置** -->
-	<!-- 配置扫描@Transaction注解的对象 -->
+	<!-- 配置扫描@Transaction注解的实例 -->
 	<bean id="transactionBeanScannerConfiguration" class="com.douglei.orm.spring.TransactionBeanScannerConfiguration" scope="singleton">
 		<!-- 指定要扫描的base package路径 -->
 		<property name="transactionBasePackages">

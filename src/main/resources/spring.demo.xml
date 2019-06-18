@@ -6,6 +6,12 @@
 						">
 	<description>spring配置文件整合jdb-orm配置实例</description>
 	
+	<!-- 
+		获取SessionFactoryRegister的两种方式 
+		1.从spring容器中获取com.douglei.orm.spring.SessionFactoryRegisterHolder实例, 再调用实例的方法 getSessionFactoryRegister()
+		2.配置com.douglei.orm.spring.SessionFactoryRegisterContext Bean, 直接调用该类的静态方法 getSessionFactoryRegister()
+	-->
+	
 	<!-- **必须配置** -->
 	<!-- 配置数据源, 获取SessionFactoryHandlerHolder实例 -->
 	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryRegisterHolder" scope="singleton">
@@ -33,6 +39,11 @@
 				<value>com.douglei.xxx.services</value>
 			</array>
 		</property>
+	</bean>
+	
+	<!-- 非必须配置, SessionFactoryRegister的上下文, 可以通过该类, 直接获取SessionFactoryRegister实例 -->
+	<bean id="sessionFactoryRegisterContext" class="com.douglei.orm.spring.SessionFactoryRegisterContext" scope="singleton">
+		<property name="sessionFactoryRegisterHolder" ref="sessionFactoryHandlerHolder"></property>
 	</bean>
 	
 </beans>

@@ -19,7 +19,7 @@ import com.douglei.orm.context.TransactionComponentProxyEntity;
 public class TransactionComponentScannerConfiguration implements BeanDefinitionRegistryPostProcessor, InitializingBean{
 	
 	/**
-	 * 要扫描@Transaction的根包路径
+	 * 要扫描的事务组件包路径
 	 */
 	private String[] transactionComponentPackages;
 	 

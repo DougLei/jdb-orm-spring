@@ -10,7 +10,7 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
 import com.douglei.orm.context.TransactionAnnotationMemoryUsage;
-import com.douglei.orm.context.TransactionProxyEntity;
+import com.douglei.orm.context.TransactionComponentProxyEntity;
 
 /**
  * Transaction Bean的扫描器配置对象
@@ -38,20 +38,20 @@ public class TransactionComponentScannerConfiguration implements BeanDefinitionR
 
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-		List<TransactionProxyEntity> transactionProxyEntities = TransactionAnnotationMemoryUsage.scanTransactionComponent(transactionComponentPackages);
+		List<TransactionComponentProxyEntity> transactionComponentProxyEntities = TransactionAnnotationMemoryUsage.scanTransactionComponent(transactionComponentPackages);
 		
 		Class<?> transactionClass = null;
 		GenericBeanDefinition definition = null;
-		for (TransactionProxyEntity transactionProxyEntity : transactionProxyEntities) {
-			transactionClass = transactionProxyEntity.getTransactionClass();
+		for (TransactionComponentProxyEntity transactionComponentProxyEntity : transactionComponentProxyEntities) {
+			transactionClass = transactionComponentProxyEntity.getTransactionComponentProxyBeanClass();
 			definition = new GenericBeanDefinition();
 			
 			// 设置该bean的class为TransactionBeanFactory类
-			definition.setBeanClass(TransactionBeanFactory.class);
+			definition.setBeanClass(TransactionComponentBeanFactory.class);
 			
 			// 将参数传递给TransactionBeanFactory类的构造函数
 			definition.getConstructorArgumentValues().addGenericArgumentValue(transactionClass);
-			definition.getConstructorArgumentValues().addGenericArgumentValue(transactionProxyEntity.getTransactionAnnotationMethods());
+			definition.getConstructorArgumentValues().addGenericArgumentValue(transactionComponentProxyEntity.getTransactionMethods());
 			
 			// 设置根据类型注入
 			definition.setAutowireMode(GenericBeanDefinition.AUTOWIRE_BY_TYPE);

@@ -1,21 +1,21 @@
 package com.douglei.orm.spring;
 
-import com.douglei.orm.context.SessionFactoryHandler;
+import com.douglei.orm.context.SessionFactoryRegister;
 
 
 /**
- * SessionFactoryHandler实例的持有对象
+ * sessionFactoryRegister实例的持有对象
  * @author DougLei
  */
 public class SessionFactoryHandlerHolder {
-	private static final SessionFactoryHandler sessionFactoryHandler = new SessionFactoryHandler();
+	private static final SessionFactoryRegister sessionFactoryRegister = new SessionFactoryRegister();
 	
 	/**
 	 * 【必须配置】设置默认的SessionFactory
 	 * @param defaultSessionFactoryConfigurationFile
 	 */
 	public void setDefaultSessionFactoryConfigurationFile(String defaultSessionFactoryConfigurationFile) {
-		sessionFactoryHandler.registerDefaultSessionFactoryByConfigurationFile(defaultSessionFactoryConfigurationFile);
+		sessionFactoryRegister.registerDefaultSessionFactoryByConfigurationFile(defaultSessionFactoryConfigurationFile);
 	}
 	
 	/**
@@ -25,16 +25,16 @@ public class SessionFactoryHandlerHolder {
 	public void setSessionFactoryConfigurationFile(String... sessionFactoryConfigurationFiles) {
 		if(sessionFactoryConfigurationFiles != null && sessionFactoryConfigurationFiles.length > 0) {
 			for (String configurationFile : sessionFactoryConfigurationFiles) {
-				sessionFactoryHandler.registerSessionFactoryByConfigurationFile(configurationFile);
+				sessionFactoryRegister.registerSessionFactoryByConfigurationFile(configurationFile);
 			}
 		}
 	}
 	
 	/**
-	 * 获取SessionFactoryHandler实例
+	 * 获取SessionFactoryRegister实例
 	 * @return
 	 */
-	public static SessionFactoryHandler getSessionFactoryHandler() {
-		return sessionFactoryHandler;
+	public static SessionFactoryRegister getSessionFactoryRegister() {
+		return sessionFactoryRegister;
 	}
 }

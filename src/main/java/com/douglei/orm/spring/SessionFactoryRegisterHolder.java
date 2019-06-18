@@ -12,7 +12,6 @@ public class SessionFactoryRegisterHolder {
 	
 	/**
 	 * 设置默认的SessionFactoryFile
-	 * 如果不配置, 则使用默认值 jdb-orm.conf.xml
 	 * @param defaultSessionFactoryConfigurationFile
 	 */
 	public void setDefaultSessionFactoryConfigurationFile(String defaultSessionFactoryConfigurationFile) {

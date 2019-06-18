@@ -13,10 +13,10 @@ import com.douglei.orm.context.TransactionAnnotationMemoryUsage;
 import com.douglei.orm.context.TransactionComponentProxyEntity;
 
 /**
- * Transaction Bean的扫描器配置对象
+ * 
  * @author DougLei
  */
-public class TransactionComponentScannerConfiguration implements BeanDefinitionRegistryPostProcessor, InitializingBean{
+public class TransactionComponentRegister implements BeanDefinitionRegistryPostProcessor, InitializingBean{
 	
 	/**
 	 * 要扫描的事务组件包路径

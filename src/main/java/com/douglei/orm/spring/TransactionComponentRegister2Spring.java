@@ -2,6 +2,8 @@ package com.douglei.orm.spring;
 
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
@@ -12,6 +14,7 @@ import com.douglei.orm.context.TransactionComponentProxyEntity;
  * 事物组件注册到Spring
  */
 public class TransactionComponentRegister2Spring {
+	private static final Logger logger = LoggerFactory.getLogger(TransactionComponentRegister2Spring.class);
 	
 	/**
 	 * 
@@ -24,6 +27,8 @@ public class TransactionComponentRegister2Spring {
 		Class<?> transactionClass = null;
 		GenericBeanDefinition definition = null;
 		for (TransactionComponentProxyEntity transactionComponentProxyEntity : transactionComponentProxyEntities) {
+			logger.debug("注册事物组件代理实体: {}", transactionComponentProxyEntity);
+			
 			transactionClass = transactionComponentProxyEntity.getTransactionComponentProxyBeanClass();
 			definition = new GenericBeanDefinition();
 			

@@ -25,7 +25,7 @@
 	</bean>
 	
 	<!-- 配置扫务组件的注册器实例 -->
-	<bean id="TransactionComponentRegister" class="com.douglei.orm.spring.TransactionComponentRegister" scope="singleton"><!-- 必须配置 -->
+	<bean id="transactionComponentRegistry" class="com.douglei.orm.spring.TransactionComponentRegistry" scope="singleton"><!-- 必须配置 -->
 		<!-- 指定要扫描的base package路径 -->
 		<property name="transactionComponentPackages"><!-- 必须配置 -->
 			<array>

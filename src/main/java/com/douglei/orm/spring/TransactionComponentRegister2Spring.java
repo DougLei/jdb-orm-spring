@@ -2,42 +2,23 @@ package com.douglei.orm.spring;
 
 import java.util.List;
 
-import org.springframework.beans.BeansException;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
-import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProcessor;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
 import com.douglei.orm.context.TransactionAnnotationMemoryUsage;
 import com.douglei.orm.context.TransactionComponentProxyEntity;
 
 /**
- * 
- * @author DougLei
+ * 事物组件注册到Spring
  */
-public class TransactionComponentRegister implements BeanDefinitionRegistryPostProcessor, InitializingBean{
+public class TransactionComponentRegister2Spring {
 	
 	/**
-	 * 要扫描的事务组件包路径
+	 * 
+	 * @param registry
+	 * @param transactionComponentPackages
 	 */
-	private String[] transactionComponentPackages;
-	 
-	@Override
-	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-		// 不用实现
-		// 这个beanFactory参数, 可以获得下面register的bean
-	}
-
-	@Override
-	public void afterPropertiesSet() throws Exception {
-		if(transactionComponentPackages == null || transactionComponentPackages.length == 0) {
-			throw new NullPointerException(getClass().getName() + " 中的transactionComponentPackages属性值不能为空");
-		}
-	}
-
-	@Override
-	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
+	protected void register2Spring(BeanDefinitionRegistry registry, String[] transactionComponentPackages) {
 		List<TransactionComponentProxyEntity> transactionComponentProxyEntities = TransactionAnnotationMemoryUsage.scanTransactionComponent(transactionComponentPackages);
 		
 		Class<?> transactionClass = null;
@@ -59,9 +40,5 @@ public class TransactionComponentRegister implements BeanDefinitionRegistryPostP
 			// 将bean注入到spring容器中
 			registry.registerBeanDefinition(transactionClass.getSimpleName(), definition);
 		}
-	}
-	
-	public void setTransactionComponentPackages(String[] transactionComponentPackages) {
-		this.transactionComponentPackages = transactionComponentPackages;
 	}
 }

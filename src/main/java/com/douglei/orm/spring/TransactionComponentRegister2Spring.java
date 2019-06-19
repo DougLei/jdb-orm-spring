@@ -24,6 +24,7 @@ public class TransactionComponentRegister2Spring {
 	protected void register2Spring(BeanDefinitionRegistry registry, String[] transactionComponentPackages) {
 		List<TransactionComponentProxyEntity> transactionComponentProxyEntities = TransactionAnnotationMemoryUsage.scanTransactionComponent(transactionComponentPackages);
 		
+		Class<?> transactionComponentProxyBeanFactoryClass = TransactionComponentProxyBeanFactory.class;
 		Class<?> transactionClass = null;
 		GenericBeanDefinition definition = null;
 		for (TransactionComponentProxyEntity transactionComponentProxyEntity : transactionComponentProxyEntities) {
@@ -33,7 +34,7 @@ public class TransactionComponentRegister2Spring {
 			definition = new GenericBeanDefinition();
 			
 			// 设置该bean的class为TransactionBeanFactory类
-			definition.setBeanClass(TransactionComponentProxyBeanFactory.class);
+			definition.setBeanClass(transactionComponentProxyBeanFactoryClass);
 			
 			// 将参数传递给TransactionBeanFactory类的构造函数
 			definition.getConstructorArgumentValues().addGenericArgumentValue(transactionClass);

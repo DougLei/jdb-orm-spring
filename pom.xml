@@ -15,11 +15,6 @@
 	
 	<dependencies>
 		<dependency>
-		    <groupId>cglib</groupId>
-		    <artifactId>cglib</artifactId>
-		    <version>3.2.12</version>
-		</dependency>
-		<dependency>
 			<groupId>com.douglei</groupId>
 			<artifactId>jdb-orm-context</artifactId>
 			<version>1.0.0</version>

@@ -7,8 +7,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
-import com.douglei.orm.context.TransactionAnnotationMemoryUsage;
-import com.douglei.orm.context.TransactionComponentProxyEntity;
+import com.douglei.orm.context.transaction.component.TransactionAnnotationMemoryUsage;
+import com.douglei.orm.context.transaction.component.TransactionComponentProxyEntity;
 
 /**
  * 事物组件注册到Spring

@@ -13,6 +13,11 @@ import org.springframework.beans.factory.support.BeanDefinitionRegistryPostProce
 public class TransactionComponentRegistry extends TransactionComponentRegister2Spring implements BeanDefinitionRegistryPostProcessor, InitializingBean{
 	
 	/**
+	 * 是否扫描所有符合添加的包, 不论是否在jar包中
+	 */
+	private boolean searchAllPath;
+	
+	/**
 	 * 要扫描的事务组件包路径
 	 */
 	private String[] transactionComponentPackages;
@@ -32,9 +37,12 @@ public class TransactionComponentRegistry extends TransactionComponentRegister2S
 
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-		register2Spring(registry, transactionComponentPackages);
+		register2Spring(registry, searchAllPath, transactionComponentPackages);
 	}
 	
+	public void setSearchAllPath(boolean searchAllPath) {
+		this.searchAllPath = searchAllPath;
+	}
 	public void setTransactionComponentPackages(String[] transactionComponentPackages) {
 		this.transactionComponentPackages = transactionComponentPackages;
 	}

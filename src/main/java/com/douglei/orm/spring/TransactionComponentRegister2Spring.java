@@ -1,9 +1,11 @@
 package com.douglei.orm.spring;
 
+import java.lang.reflect.Field;
 import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
@@ -32,6 +34,15 @@ public class TransactionComponentRegister2Spring {
 			logger.debug("注册事物组件代理实体: {}", transactionComponentProxyEntity);
 			
 			transactionClass = transactionComponentProxyEntity.getTransactionComponentProxyBeanClass();
+			
+			// TODO 
+			Field[] fileds = transactionClass.getDeclaredFields();
+			for (Field f : fileds) {
+				System.out.println(f.getAnnotation(Autowired.class));
+				System.out.println(f.getName());
+			}
+			
+			
 			definition = new GenericBeanDefinition();
 			
 			// 设置该bean的class为TransactionBeanFactory类

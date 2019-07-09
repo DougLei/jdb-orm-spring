@@ -24,8 +24,6 @@ public class TransactionComponentRegistry extends TransactionComponentRegister2S
 	 
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
-		// 不用实现
-		// 这个beanFactory参数, 可以获得下面register的bean
 	}
 
 	@Override

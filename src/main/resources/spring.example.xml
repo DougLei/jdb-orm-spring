@@ -37,4 +37,6 @@
 		</property>
 	</bean>
 	
+	<!-- 配置事务组件bean的处理器, 主要用来处理事务组件中的属性注入 -->
+	<bean id="transactionComponentInstantiationBeanPostProcessor" class="com.douglei.orm.spring.TransactionComponentInstantiationBeanPostProcessor"/>
 </beans>

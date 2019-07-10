@@ -14,23 +14,23 @@ import com.douglei.orm.context.TransactionProxyInterceptor;
  */
 public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T> {
 	
-	private Class<T> transactionComponentProxyBeanClass;
+	private Class<T> transactionComponentClass;
 	private List<Method> transactionMethods;
 	
-	public TransactionComponentProxyBeanFactory(Class<T> transactionComponentProxyBeanClass, List<Method> transactionMethods) {
-		this.transactionComponentProxyBeanClass = transactionComponentProxyBeanClass;
+	public TransactionComponentProxyBeanFactory(Class<T> transactionComponentClass, List<Method> transactionMethods) {
+		this.transactionComponentClass = transactionComponentClass;
 		this.transactionMethods = transactionMethods;
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public T getObject() throws Exception {
-		return (T) ProxyBeanContext.createProxy(transactionComponentProxyBeanClass, new TransactionProxyInterceptor(transactionComponentProxyBeanClass, transactionMethods));
+		return (T) ProxyBeanContext.createProxy(transactionComponentClass, new TransactionProxyInterceptor(transactionComponentClass, transactionMethods));
 	}
 
 	@Override
 	public Class<?> getObjectType() {
-		return transactionComponentProxyBeanClass;
+		return transactionComponentClass;
 	}
 
 	@Override

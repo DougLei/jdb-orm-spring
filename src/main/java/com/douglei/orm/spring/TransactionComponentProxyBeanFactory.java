@@ -31,7 +31,10 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 	@SuppressWarnings("unchecked")
 	@Override
 	public T getObject() throws Exception {
-		ProxyBean proxyBean = ProxyBeanContext.createProxy(transactionComponentClass, new TransactionProxyInterceptor(transactionComponentClass, transactionComponentEntity.getTransactionMethods()));
+		ProxyBean proxyBean = ProxyBeanContext.getProxyBean(transactionComponentClass);
+		if(proxyBean == null) {
+			proxyBean = ProxyBeanContext.createAndAddProxy(transactionComponentClass, new TransactionProxyInterceptor(transactionComponentClass, transactionComponentEntity.getTransactionMethods()));
+		}
 		doAutowired(proxyBean);
 		return (T) proxyBean.getProxy();
 	}
@@ -45,8 +48,9 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 	 * @throws BeansException 
 	 */
 	private void doAutowired(ProxyBean proxyBean) throws BeansException, IllegalArgumentException, IllegalAccessException {
+		System.out.println(proxyBean.getProxy());
 		Object originObject = proxyBean.getOriginObject();
-		Field[] fields = originObject.getClass().getDeclaredFields();
+		Field[] fields = transactionComponentClass.getDeclaredFields();
 		for (Field field : fields) {
 			if(field.isAnnotationPresent(Autowired.class)) {
 				field.setAccessible(true);

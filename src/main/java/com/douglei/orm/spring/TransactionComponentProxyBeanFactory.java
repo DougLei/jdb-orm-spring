@@ -22,14 +22,16 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 	private ApplicationContext applicationContext;
 	
 	private TransactionComponentEntity transactionComponentEntity;
+	private Class<?> transactionComponentClass;
 	public TransactionComponentProxyBeanFactory(TransactionComponentEntity transactionComponentEntity) {
 		this.transactionComponentEntity = transactionComponentEntity;
+		this.transactionComponentClass = transactionComponentEntity.getTransactionComponentClass();
 	}
 	
 	@SuppressWarnings("unchecked")
 	@Override
 	public T getObject() throws Exception {
-		ProxyBean proxyBean = ProxyBeanContext.createProxy(transactionComponentEntity.getTransactionComponentClass(), new TransactionProxyInterceptor(transactionComponentEntity.getTransactionComponentClass(), transactionComponentEntity.getTransactionMethods()));
+		ProxyBean proxyBean = ProxyBeanContext.createProxy(transactionComponentClass, new TransactionProxyInterceptor(transactionComponentClass, transactionComponentEntity.getTransactionMethods()));
 		doAutowired(proxyBean);
 		return (T) proxyBean.getProxy();
 	}
@@ -48,7 +50,7 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 		for (Field field : fields) {
 			if(field.isAnnotationPresent(Autowired.class)) {
 				field.setAccessible(true);
-				if(field.getType() == originObject.getClass()) {// 如果属性是自身对象, 则将代理对象注入
+				if(field.getType() == transactionComponentClass) {// 如果属性是自身对象, 则将代理对象注入
 					field.set(originObject, proxyBean.getProxy());
 				}else {// 否则属性是其他对象, 则去spring容器中找寻并注入
 					field.set(originObject, applicationContext.getBean(field.getType()));
@@ -60,7 +62,7 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 
 	@Override
 	public Class<?> getObjectType() {
-		return transactionComponentEntity.getTransactionComponentClass();
+		return transactionComponentClass;
 	}
 
 	@Override

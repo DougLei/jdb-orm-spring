@@ -53,6 +53,8 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 	 * @throws BeansException 
 	 */
 	private void doAutowired(ProxyBean proxyBean) throws BeansException, IllegalArgumentException, IllegalAccessException {
+		// TODO TEST!!!!!
+		System.out.println(proxyBean.getProxy());
 		Object originObject = proxyBean.getOriginObject();
 		Field[] fields = transactionComponentClass.getDeclaredFields();
 		for (Field field : fields) {

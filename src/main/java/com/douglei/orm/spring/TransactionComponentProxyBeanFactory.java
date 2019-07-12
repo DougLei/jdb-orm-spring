@@ -14,6 +14,7 @@ import com.douglei.aop.ProxyBean;
 import com.douglei.aop.ProxyBeanContext;
 import com.douglei.orm.context.TransactionProxyInterceptor;
 import com.douglei.orm.context.transaction.component.TransactionComponentEntity;
+import com.douglei.tools.utils.reflect.ValidationUtil;
 
 /**
  * 事物组件代理bean工厂
@@ -26,11 +27,9 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 	
 	private TransactionComponentEntity transactionComponentEntity;
 	private Class<?> transactionComponentClass;
-	private Class<?>[] transactionComponentInterfaces;
 	public TransactionComponentProxyBeanFactory(TransactionComponentEntity transactionComponentEntity) {
 		this.transactionComponentEntity = transactionComponentEntity;
 		this.transactionComponentClass = transactionComponentEntity.getTransactionComponentClass();
-		this.transactionComponentInterfaces = this.transactionComponentClass.getInterfaces();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -58,7 +57,7 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 		for (Field field : fields) {
 			if(field.isAnnotationPresent(Autowired.class)) {
 				if(field.getType().isInterface()) { // 如果属性是接口
-					if(implementInterface(field.getType())) { // 判断被代理对象是否实现该接口, 如果实现, 则将代理对象注入, 否则放弃注入, 记录日志
+					if(ValidationUtil.isImplementInterface(field.getType(), this.transactionComponentClass.getInterfaces())) { // 判断被代理对象是否实现该接口, 如果实现, 则将代理对象注入, 否则放弃注入, 记录日志
 						if(logger.isDebugEnabled()) {
 							logger.debug("[{}]类实现了[{}]接口, 将代理对象注入该接口属性", transactionComponentClass.getName(), field.getType().getName());
 						}
@@ -85,22 +84,6 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 		}
 	}
 
-	/**
-	 * 是否实现了接口
-	 * @param interfaceClass
-	 * @return
-	 */
-	private boolean implementInterface(Class<?> interfaceClass) {
-		if(transactionComponentInterfaces.length > 0) {
-			for (Class<?> transactionComponentInterface : transactionComponentInterfaces) {
-				if(interfaceClass == transactionComponentInterface) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-	
 	/**
 	 * 给属性赋值
 	 * @param field

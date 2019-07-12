@@ -36,4 +36,7 @@
 			</array>
 		</property>
 	</bean>
+	
+	<!-- 配置销毁ProxyBeanContext实例 -->
+	<bean id="destroyProxyBeanContext" class="com.douglei.orm.spring.DestroyProxyBeanContext" />
 </beans>

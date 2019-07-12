@@ -37,6 +37,6 @@
 		</property>
 	</bean>
 	
-	<!-- 配置销毁ProxyBeanContext实例的监听器 -->
+	<!-- 配置销毁ProxyBeanContext的监听器 -->
 	<bean id="destroyProxyBeanContextListener" class="com.douglei.orm.spring.DestroyProxyBeanContextListener" />
 </beans>

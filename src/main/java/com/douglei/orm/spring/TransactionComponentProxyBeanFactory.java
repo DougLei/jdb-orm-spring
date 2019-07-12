@@ -52,7 +52,6 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 	 * @throws BeansException 
 	 */
 	private void doAutowired(ProxyBean proxyBean) throws BeansException, IllegalArgumentException, IllegalAccessException {
-		Object originObject = proxyBean.getOriginObject();
 		Field[] fields = transactionComponentClass.getDeclaredFields();
 		for (Field field : fields) {
 			if(field.isAnnotationPresent(Autowired.class)) {
@@ -61,7 +60,7 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 						if(logger.isDebugEnabled()) {
 							logger.debug("[{}]类实现了[{}]接口, 将代理对象注入该接口属性", transactionComponentClass.getName(), field.getType().getName());
 						}
-						setValue(field, originObject, proxyBean.getProxy());
+						setValue(field, proxyBean.getOriginObject(), proxyBean.getProxy());
 						continue;
 					}
 					if(logger.isDebugEnabled()) {
@@ -72,12 +71,12 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 						if(logger.isDebugEnabled()) {
 							logger.debug("属性[{}]的类型[{}]与被代理对象[{}]的类型一致, 将代理对象注入该属性", field.getName(), field.getType().getName(), transactionComponentClass.getName());
 						}
-						setValue(field, originObject, proxyBean.getProxy());
+						setValue(field, proxyBean.getOriginObject(), proxyBean.getProxy());
 					}else { // 否则是其他对象, 则去spring容器中寻找并注入
 						if(logger.isDebugEnabled()) {
 							logger.debug("属性[{}]的类型为[{}], 在spring容器中寻找相应的实例并注入该属性", field.getName(), field.getType().getName());
 						}
-						setValue(field, originObject, applicationContext.getBean(field.getType()));
+						setValue(field, proxyBean.getOriginObject(), applicationContext.getBean(field.getType()));
 					}
 				}
 			}

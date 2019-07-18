@@ -19,11 +19,11 @@ public class TransactionComponentRegister2Spring {
 	/**
 	 * 
 	 * @param registry
-	 * @param searchAllPath
+	 * @param searchAll
 	 * @param transactionComponentPackages
 	 */
-	protected void register2Spring(BeanDefinitionRegistry registry, boolean searchAllPath, String[] transactionComponentPackages) {
-		List<TransactionComponentEntity> transactionComponentEntities = TransactionAnnotationMemoryUsage.scanTransactionComponent(searchAllPath, transactionComponentPackages);
+	protected void register2Spring(BeanDefinitionRegistry registry, boolean searchAll, String[] transactionComponentPackages) {
+		List<TransactionComponentEntity> transactionComponentEntities = TransactionAnnotationMemoryUsage.scanTransactionComponent(searchAll, transactionComponentPackages);
 		
 		Class<?> transactionComponentProxyBeanFactoryClass = TransactionComponentProxyBeanFactory.class;
 		GenericBeanDefinition definition = null;

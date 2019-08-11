@@ -94,7 +94,6 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 	private void setValue(Field field, Object obj, Object value) throws IllegalArgumentException, IllegalAccessException {
 		field.setAccessible(true);
 		field.set(obj, value);
-		field.setAccessible(false);
 	}
 
 	@Override

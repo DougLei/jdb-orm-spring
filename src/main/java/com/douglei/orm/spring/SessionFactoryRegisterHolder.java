@@ -8,33 +8,30 @@ import com.douglei.orm.context.SessionFactoryRegister;
  * @author DougLei
  */
 public class SessionFactoryRegisterHolder {
-	private static final SessionFactoryRegister sessionFactoryRegister = new SessionFactoryRegister();
+	
+	private SessionFactoryRegister sessionFactoryRegister;
 	
 	/**
-	 * 设置默认的SessionFactoryFile
-	 * @param defaultSessionFactoryConfigurationFile
+	 * 设置默认的SessionFactory
+	 * @param defaultConfiguration
 	 */
-	public void setDefaultSessionFactoryConfigurationFile(String defaultSessionFactoryConfigurationFile) {
-		sessionFactoryRegister.registerDefaultSessionFactoryByConfigurationFile(defaultSessionFactoryConfigurationFile);
+	public void setDefaultSessionFactory(ConfigurationWrapper defaultConfiguration) {
+		sessionFactoryRegister.registerDefaultSessionFactory(defaultConfiguration.getConfigurationFile(), defaultConfiguration.getDataSource(), defaultConfiguration.getMappingCacheStore(), false);
 	}
 	
 	/**
 	 * 【多数据源】设置SessionFactory
-	 * @param sessionFactoryConfigurationFiles
+	 * @param configurations
 	 */
-	public void setSessionFactoryConfigurationFiles(String... sessionFactoryConfigurationFiles) {
-		if(sessionFactoryConfigurationFiles != null && sessionFactoryConfigurationFiles.length > 0) {
-			for (String configurationFile : sessionFactoryConfigurationFiles) {
-				sessionFactoryRegister.registerSessionFactoryByConfigurationFile(configurationFile);
+	public void setSessionFactorys(ConfigurationWrapper... configurations) {
+		if(configurations.length > 0) {
+			for (ConfigurationWrapper configuration : configurations) {
+				sessionFactoryRegister.registerSessionFactoryByConfigurationFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingCacheStore());
 			}
 		}
 	}
-	
-	/**
-	 * 获取SessionFactoryRegister实例
-	 * @return
-	 */
-	public static SessionFactoryRegister getSessionFactoryRegister() {
-		return sessionFactoryRegister;
+
+	public void setSessionFactoryRegister(SessionFactoryRegister sessionFactoryRegister) {
+		this.sessionFactoryRegister = sessionFactoryRegister;
 	}
 }

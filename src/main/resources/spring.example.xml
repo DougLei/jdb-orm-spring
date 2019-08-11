@@ -6,20 +6,32 @@
 						">
 	<description>spring配置文件整合jdb-orm配置实例</description>
 	
-	<!-- 
-		获取SessionFactoryRegister的方式 
-			com.douglei.orm.spring.SessionFactoryRegisterHolder, 直接调用该类的静态方法 getSessionFactoryRegister()
-	-->
+	<bean id="sessionFactoryRegister" class="com.douglei.orm.context.SessionFactoryRegister" scope="singleton" />
+	
+	<!-- 配置默认的数据源配置实例 -->
+	<bean id="defaultConfiguration" class="com.douglei.orm.spring.ConfigurationWrapper" scope="prototype">
+		<property name="configurationFile" value="jdb-orm.conf.xml"></property><!-- 必须配置 -->
+		<property name="dataSource" ref="xxx"></property><!-- 可以不配置 -->
+		<property name="mappingCacheStore" ref="xxx"></property><!-- 可以不配置 -->
+	</bean>
+	
+	<!-- 多数据源也需要配置com.douglei.orm.spring.ConfigurationWrapper, 配置的方式和上面一致 -->
+	<bean id="multiConfigurationTest" class="com.douglei.orm.spring.ConfigurationWrapper" scope="prototype">
+		<property name="configurationFile" value="xxxx.xml"></property><!-- 必须配置 -->
+		<property name="dataSource" ref="xxx"></property><!-- 可以不配置 -->
+		<property name="mappingCacheStore" ref="xxx"></property><!-- 可以不配置 -->
+	</bean>
 	
 	<!-- 配置数据源, 获取SessionFactoryHandlerHolder实例 -->
 	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryRegisterHolder" scope="singleton"><!-- 必须配置 -->
-		<property name="defaultSessionFactoryConfigurationFile" value="jdb-orm.conf.xml"></property><!-- 必须配置 -->
+		<property name="sessionFactoryRegister" ref="sessionFactoryRegister"></property><!-- 必须配置 -->
+		<property name="defaultSessionFactory" value="defaultConfiguration"></property><!-- 必须配置 -->
 		
 		<!-- 配置多数据源, 非必须配置 -->
-		<property name="sessionFactoryConfigurationFiles">
+		<property name="sessionFactorys">
 			<array>
-				<value>xxx.xml</value>
-				<value>xxx.xml</value>
+				<ref bean="multiConfigurationTest"/>
+				<ref bean="xxx"/>
 			</array>
 		</property>
 	</bean>

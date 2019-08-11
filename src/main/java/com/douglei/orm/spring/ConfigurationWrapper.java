@@ -9,9 +9,9 @@ import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCach
  */
 public class ConfigurationWrapper {
 	
-	private String configurationFile;
-	private ExternalDataSource dataSource;
-	private MappingCacheStore mappingCacheStore;
+	protected String configurationFile;
+	protected ExternalDataSource dataSource;
+	protected MappingCacheStore mappingCacheStore;
 	
 	public String getConfigurationFile() {
 		return configurationFile;

@@ -10,13 +10,16 @@ import com.douglei.orm.context.SessionFactoryRegister;
 public class SessionFactoryRegisterHolder {
 	
 	private SessionFactoryRegister sessionFactoryRegister;
+	public void setSessionFactoryRegister(SessionFactoryRegister sessionFactoryRegister) {
+		this.sessionFactoryRegister = sessionFactoryRegister;
+	}
 	
 	/**
 	 * 设置默认的SessionFactory
 	 * @param defaultConfiguration
 	 */
 	public void setDefaultSessionFactory(ConfigurationWrapper defaultConfiguration) {
-		sessionFactoryRegister.registerDefaultSessionFactory(defaultConfiguration.getConfigurationFile(), defaultConfiguration.getDataSource(), defaultConfiguration.getMappingCacheStore(), false);
+		sessionFactoryRegister.registerDefaultSessionFactory(defaultConfiguration.getConfigurationFile(), defaultConfiguration.getDataSource(), defaultConfiguration.getMappingStore(), false);
 	}
 	
 	/**
@@ -26,12 +29,8 @@ public class SessionFactoryRegisterHolder {
 	public void setSessionFactorys(ConfigurationWrapper... configurations) {
 		if(configurations.length > 0) {
 			for (ConfigurationWrapper configuration : configurations) {
-				sessionFactoryRegister.registerSessionFactoryByConfigurationFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingCacheStore());
+				sessionFactoryRegister.registerSessionFactoryByConfigurationFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingStore());
 			}
 		}
-	}
-
-	public void setSessionFactoryRegister(SessionFactoryRegister sessionFactoryRegister) {
-		this.sessionFactoryRegister = sessionFactoryRegister;
 	}
 }

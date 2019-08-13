@@ -1,7 +1,7 @@
 package com.douglei.orm.spring;
 
 import com.douglei.orm.configuration.ExternalDataSource;
-import com.douglei.orm.configuration.environment.mapping.cache.store.MappingCacheStore;
+import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 
 /**
  * 
@@ -11,7 +11,7 @@ public class ConfigurationWrapper {
 	
 	protected String configurationFile;
 	protected ExternalDataSource dataSource;
-	protected MappingCacheStore mappingCacheStore;
+	protected MappingStore mappingStore;
 	
 	public String getConfigurationFile() {
 		return configurationFile;
@@ -25,10 +25,10 @@ public class ConfigurationWrapper {
 	public void setDataSource(ExternalDataSource dataSource) {
 		this.dataSource = dataSource;
 	}
-	public MappingCacheStore getMappingCacheStore() {
-		return mappingCacheStore;
+	public MappingStore getMappingStore() {
+		return mappingStore;
 	}
-	public void setMappingCacheStore(MappingCacheStore mappingCacheStore) {
-		this.mappingCacheStore = mappingCacheStore;
+	public void setMappingStore(MappingStore mappingStore) {
+		this.mappingStore = mappingStore;
 	}
 }

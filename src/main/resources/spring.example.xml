@@ -24,6 +24,31 @@
 		<property name="mappingCacheStore" ref="xxx"></property><!-- 可以不配置 -->
 	</bean>
 	
+	<!-- 非必须配置, 配置redis -->
+	<!-- redis连接池配置 -->
+	<bean id="redisPoolConfig" class="redis.clients.jedis.JedisPoolConfig" scope="singleton">
+		<property name="maxIdle" value="300" />  
+		<property name="maxTotal" value="600" />  
+		<property name="maxWaitMillis" value="1000" />  
+		<property name="testOnBorrow" value="true" />  
+	</bean>
+	<!-- redis连接工厂 -->
+	<bean id="redisStandaloneConfiguration" class="org.springframework.data.redis.connection.RedisStandaloneConfiguration" scope="singleton">
+		<property name="database" value="0"></property>
+		<property name="hostName" value="localhost"></property>
+		<property name="port" value="6379"></property>
+		<property name="password" value=""></property>
+	</bean>
+	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<constructor-arg name="poolConfig" ref="redisPoolConfig"></constructor-arg>
+		<constructor-arg name=""></constructor-arg>
+	</bean>
+	<!-- redis操作对象 -->
+	<bean id="redisTemplate" class="org.springframework.data.redis.core.StringRedisTemplate" scope="singleton"> 
+		<property name="connectionFactory" ref="jedisConnectionFactory" />  
+	</bean> 
+	
+	
 	<!-- 配置数据源, 获取SessionFactoryHandlerHolder实例 -->
 	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryRegisterHolder" scope="singleton"><!-- 必须配置 -->
 		<property name="sessionFactoryRegister" ref="sessionFactoryRegister"></property><!-- 必须配置 -->

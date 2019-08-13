@@ -16,14 +16,14 @@
 	<bean id="defaultConfiguration" class="com.douglei.orm.spring.ConfigurationWrapper" scope="prototype">
 		<property name="configurationFile" value="jdb-orm.conf.xml"></property><!-- 必须配置 -->
 		<property name="dataSource" ref="dataSource"></property><!-- 可以不配置, 在jdb-orm中配置数据源 -->
-		<property name="mappingCacheStore" ref="application"></property><!-- 可以不配置 -->
+		<property name="mappingStore" ref="application"></property><!-- 可以不配置 -->
 	</bean>
 	
 	<!-- 非必须配置, 多数据源也需要配置com.douglei.orm.spring.ConfigurationWrapper, 配置的方式和上面一致 -->
 	<bean id="multiConfiguration1" class="com.douglei.orm.spring.ConfigurationWrapper" scope="prototype">
 		<property name="configurationFile" value="xxxx.xml"></property><!-- 必须配置 -->
 		<property name="dataSource" ref="dataSource"></property><!-- 可以不配置, 在jdb-orm中配置数据源 -->
-		<property name="mappingCacheStore" ref="application"></property><!-- 可以不配置 -->
+		<property name="mappingStore" ref="application"></property><!-- 可以不配置 -->
 	</bean>
 	
 	<!-- 必须配置, 配置sessionFactory注册器实例, 单例 -->
@@ -34,7 +34,7 @@
 		<property name="defaultSessionFactory" value="defaultConfiguration"></property><!-- 必须配置 -->
 		
 		<!-- 配置多数据源, 非必须配置 -->
-		<property name="sessionFactorys">
+		<property name="sessionFactories">
 			<array>
 				<ref bean="multiConfiguration1"/>
 				<!-- 其他配置 -->
@@ -58,4 +58,29 @@
 	
 	<!-- 配置销毁ProxyBeanContext的监听器 -->
 	<bean id="destroyProxyBeanContextListener" class="com.douglei.orm.spring.DestroyProxyBeanContextListener" />
+	
+	
+	<!-- redis连接池配置 -->
+	<bean id="redisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="1000"></property>
+		<property name="maxIdle" value="200"></property>
+		<property name="maxWaitMillis" value="10000"></property>
+	</bean>
+	<!-- redis连接池 -->
+	<bean id="reidsPool" class="redis.clients.jedis.JedisPool">
+		<constructor-arg name="poolConfig" ref="redisPoolConfig"></constructor-arg>
+		<constructor-arg name="host" value="localhost"></constructor-arg>
+		<constructor-arg name="port" value="6379"></constructor-arg>
+		<constructor-arg name="timeout" value="10000"></constructor-arg>
+		<constructor-arg name="password" value="douglei"></constructor-arg>
+	</bean>
+	<!-- 配置redis方式的映射存储对象, 给com.douglei.orm.spring.ConfigurationWrapper的mappingStore使用 -->
+	<bean id="redisStore" class="com.douglei.orm.spring.redis.mapping.store.RedisMappingStore">
+		<property name="redisPool" ref="reidsPool"></property>
+	</bean>
+	
+	
+	
+	
+	
 </beans>

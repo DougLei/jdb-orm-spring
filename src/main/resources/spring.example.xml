@@ -79,8 +79,4 @@
 		<property name="redisPool" ref="reidsPool"></property>
 	</bean>
 	
-	
-	
-	
-	
 </beans>

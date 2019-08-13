@@ -26,7 +26,7 @@ public class SessionFactoryRegisterHolder {
 	 * 【多数据源】设置SessionFactory
 	 * @param configurations
 	 */
-	public void setSessionFactorys(ConfigurationWrapper... configurations) {
+	public void setSessionFactories(ConfigurationWrapper... configurations) {
 		if(configurations.length > 0) {
 			for (ConfigurationWrapper configuration : configurations) {
 				sessionFactoryRegister.registerSessionFactoryByConfigurationFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingStore());

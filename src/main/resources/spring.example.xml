@@ -23,7 +23,7 @@
 	<bean id="multiConfiguration1" class="com.douglei.orm.spring.ConfigurationWrapper" scope="prototype">
 		<property name="configurationFile" value="xxxx.xml"></property><!-- 必须配置 -->
 		<property name="dataSource" ref="dataSource"></property><!-- 可以不配置, 在jdb-orm中配置数据源 -->
-		<property name="mappingStore" ref="application"></property><!-- 可以不配置 -->
+		<property name="mappingStore" ref="redisTemplateStore"></property><!-- 可以不配置 -->
 	</bean>
 	
 	<!-- 必须配置, 配置sessionFactory注册器实例, 单例 -->
@@ -60,6 +60,7 @@
 	<bean id="destroyProxyBeanContextListener" class="com.douglei.orm.spring.DestroyProxyBeanContextListener" />
 	
 	
+	<!-- 整合jdb-orm中提供的redis存储映射, 使用redis原生接口 -->
 	<!-- redis连接池配置 -->
 	<bean id="redisPoolConfig" class="redis.clients.jedis.JedisPoolConfig">
 		<property name="maxTotal" value="1000"></property>
@@ -79,4 +80,41 @@
 		<property name="redisPool" ref="reidsPool"></property>
 	</bean>
 	
+	
+	<!-- 整合jdb-orm-spring中提供的redis存储映射, 使用spring提供的接口 -->
+	<bean id="redisPassword" class="org.springframework.data.redis.connection.RedisPassword">
+		<constructor-arg name="thePassword" value="douglei"></constructor-arg>
+	</bean>
+	<bean id="redisStandaloneConfiguration" class="org.springframework.data.redis.connection.RedisStandaloneConfiguration"><!-- redis的单机配置 -->
+		<property name="hostName" value="localhost"/>
+		<property name="port" value="6379"/>
+		<property name="password" ref="redisPassword" />
+		<property name="database" value="0"/>
+	</bean>
+	<!--配置jedis链接工厂 spring-data-redis2.0中  建议改为构造器传入一个
+							RedisStandaloneConfiguration  单机
+                            RedisSentinelConfiguration  主从复制
+                            RedisClusterConfiguration  集群
+		连接池由框架控制
+	-->
+	<bean id="jedisConnectionFactory" class="org.springframework.data.redis.connection.jedis.JedisConnectionFactory">
+		<constructor-arg name="standaloneConfig" ref="redisStandaloneConfiguration"></constructor-arg>
+	</bean>
+	
+	<!--手动设置 key 与 value的序列化方式-->
+    <bean id="keySerializer" class="org.springframework.data.redis.serializer.StringRedisSerializer"/>
+    <bean id="valueSerializer" class="org.springframework.data.redis.serializer.JdkSerializationRedisSerializer"/>
+
+    <!--配置jedis模板  -->
+    <bean id="redisTemplate" class="org.springframework.data.redis.core.RedisTemplate">
+        <property name="connectionFactory" ref="jedisConnectionFactory" />
+        <property name="keySerializer" ref="keySerializer" />
+        <property name="valueSerializer" ref="valueSerializer" />
+    </bean>
+    
+    <!-- 配置redis存储映射实例 -->
+	<bean id="redisTemplateStore" class="com.douglei.orm.spring.redis.mapping.store.RedisMappingStore">
+		<property name="template" ref="redisTemplate"></property>
+		<property name="multiDataSource" value="true"></property><!-- 非必须配置, 默认值为false -->
+	</bean>    
 </beans>

@@ -4,7 +4,11 @@ import java.util.Collection;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
+import org.springframework.data.redis.connection.RedisConnection;
+import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.serializer.RedisSerializer;
 
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
@@ -21,6 +25,8 @@ import com.douglei.tools.utils.Collections;
 public class RedisMappingStore extends RedisHandler implements MappingStore {
 	private static final Logger logger = LoggerFactory.getLogger(RedisMappingStore.class);
 	private RedisTemplate<String, Object> template;
+	private RedisSerializer<String> keySerializer;
+	private RedisSerializer<Object> valueSerializer;
 
 	@Override
 	public void initializeStore(int size) {
@@ -39,7 +45,15 @@ public class RedisMappingStore extends RedisHandler implements MappingStore {
 	@Override
 	public void addMapping(Collection<Mapping> mappings) throws RepeatedMappingException {
 		if(Collections.unEmpty(mappings)) {
-			mappings.forEach(mapping -> template.opsForValue().set(getCode(mapping.getCode()), mapping));
+			template.executePipelined(new RedisCallback<Object>() {
+				@Override
+				public Object doInRedis(RedisConnection connection) throws DataAccessException {
+					for (Mapping mapping : mappings) {
+						connection.set(keySerializer.serialize(getCode(mapping.getCode())), valueSerializer.serialize(mapping));
+					}
+					return null;
+				}
+			});
 		}
 	}
 
@@ -55,11 +69,17 @@ public class RedisMappingStore extends RedisHandler implements MappingStore {
 	@Override
 	public void addOrCoverMapping(Collection<Mapping> mappings) {
 		if(Collections.unEmpty(mappings)) {
-			mappings.forEach(mapping -> {
-				if(logger.isDebugEnabled() && mappingExists(getCode(mapping.getCode()))) {
-					logger.debug("覆盖已经存在code为[{}]的映射对象: {}", mapping.getCode(), getMapping(mapping.getCode()));
+			template.executePipelined(new RedisCallback<Object>() {
+				@Override
+				public Object doInRedis(RedisConnection connection) throws DataAccessException {
+					for (Mapping mapping : mappings) {
+						if(logger.isDebugEnabled() && mappingExists(getCode(mapping.getCode()))) {
+							logger.debug("覆盖已经存在code为[{}]的映射对象: {}", mapping.getCode(), getMapping(mapping.getCode()));
+						}
+						connection.set(keySerializer.serialize(getCode(mapping.getCode())), valueSerializer.serialize(mapping));
+					}
+					return null;
 				}
-				template.opsForValue().set(getCode(mapping.getCode()), mapping);
 			});
 		}
 	}
@@ -78,7 +98,13 @@ public class RedisMappingStore extends RedisHandler implements MappingStore {
 	@Override
 	public void removeMapping(Collection<String> mappingCodes) throws NotExistsMappingException {
 		if(Collections.unEmpty(mappingCodes)) {
-			mappingCodes.forEach(mappingCode -> template.delete(getCode(mappingCode)));
+			template.execute(new RedisCallback<Object>() {
+				@Override
+				public Object doInRedis(RedisConnection connection) throws DataAccessException {
+					connection.del(getCodeByteArray(mappingCodes));
+					return null;
+				}
+			});
 		}
 	}
 	
@@ -102,7 +128,10 @@ public class RedisMappingStore extends RedisHandler implements MappingStore {
 		template = null;
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void setTemplate(RedisTemplate<String, Object> template) {
 		this.template = template;
+		this.keySerializer = (RedisSerializer<String>) template.getKeySerializer();
+		this.valueSerializer = (RedisSerializer<Object>) template.getValueSerializer();
 	}
 }

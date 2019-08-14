@@ -7,26 +7,19 @@ import org.slf4j.LoggerFactory;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.serializer.RedisSerializer;
 
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
 import com.douglei.orm.configuration.environment.mapping.store.NotExistsMappingException;
 import com.douglei.orm.configuration.environment.mapping.store.RepeatedMappingException;
-import com.douglei.orm.configuration.environment.mapping.store.impl.redis.RedisHandler;
 import com.douglei.tools.utils.Collections;
 
 /**
  * 
  * @author DougLei
  */
-public class RedisMappingStore extends RedisHandler implements MappingStore {
+public class RedisMappingStore extends SpringRedisMappingStore {
 	private static final Logger logger = LoggerFactory.getLogger(RedisMappingStore.class);
-	private RedisTemplate<String, Object> template;
-	private RedisSerializer<String> keySerializer;
-	private RedisSerializer<Object> valueSerializer;
 
 	@Override
 	public void initializeStore(int size) {
@@ -126,12 +119,5 @@ public class RedisMappingStore extends RedisHandler implements MappingStore {
 	public void destroy() throws DestroyException {
 		initializeStore(0);
 		template = null;
-	}
-	
-	@SuppressWarnings("unchecked")
-	public void setTemplate(RedisTemplate<String, Object> template) {
-		this.template = template;
-		this.keySerializer = (RedisSerializer<String>) template.getKeySerializer();
-		this.valueSerializer = (RedisSerializer<Object>) template.getValueSerializer();
 	}
 }

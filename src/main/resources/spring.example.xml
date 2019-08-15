@@ -76,7 +76,7 @@
 		<constructor-arg name="password" value="douglei"></constructor-arg>
 	</bean>
 	<!-- 配置redis方式的映射存储对象, 给com.douglei.orm.spring.ConfigurationWrapper的mappingStore使用 -->
-	<bean id="redisStore" class="com.douglei.orm.spring.redis.mapping.store.RedisMappingStore">
+	<bean id="redisStore" class="com.douglei.orm.configuration.environment.mapping.store.impl.redis.RedisMappingStore">
 		<property name="redisPool" ref="reidsPool"></property>
 	</bean>
 	

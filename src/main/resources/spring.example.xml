@@ -113,7 +113,7 @@
     </bean>
     
     <!-- 配置redis存储映射实例 -->
-	<bean id="redisTemplateStore" class="com.douglei.orm.spring.redis.mapping.store.RedisMappingStore">
+	<bean id="redisTemplateStore" class="com.douglei.orm.spring.redis.mapping.store.SpringRedisMappingStoreImpl">
 		<property name="template" ref="redisTemplate"></property>
 		<property name="multiDataSource" value="true"></property><!-- 非必须配置, 默认值为false -->
 	</bean>    

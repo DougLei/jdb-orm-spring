@@ -73,23 +73,24 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 		template.opsForValue().set(code, mapping);
 	}
 	
-	@Override
-	public void addOrCoverMapping(Collection<Mapping> mappings) {
-		if(Collections.unEmpty(mappings)) {
-			template.executePipelined(new RedisCallback<Object>() {
-				@Override
-				public Object doInRedis(RedisConnection connection) throws DataAccessException {
-					for (Mapping mapping : mappings) {
-						if(logger.isDebugEnabled() && mappingExists(getCode(mapping.getCode()))) {
-							logger.debug("覆盖已经存在code为[{}]的映射对象: {}", mapping.getCode(), getMapping(mapping.getCode()));
-						}
-						connection.set(keySerializer.serialize(getCode(mapping.getCode())), valueSerializer.serialize(mapping));
-					}
-					return null;
-				}
-			});
-		}
-	}
+	// 目前使用不上批量覆盖映射功能
+//	@Override
+//	public void addOrCoverMapping(Collection<Mapping> mappings) {
+//		if(Collections.unEmpty(mappings)) {
+//			template.executePipelined(new RedisCallback<Object>() {
+//				@Override
+//				public Object doInRedis(RedisConnection connection) throws DataAccessException {
+//					for (Mapping mapping : mappings) {
+//						if(logger.isDebugEnabled() && mappingExists(getCode(mapping.getCode()))) {
+//							logger.debug("覆盖已经存在code为[{}]的映射对象: {}", mapping.getCode(), getMapping(mapping.getCode()));
+//						}
+//						connection.set(keySerializer.serialize(getCode(mapping.getCode())), valueSerializer.serialize(mapping));
+//					}
+//					return null;
+//				}
+//			});
+//		}
+//	}
 	
 	@Override
 	public Mapping removeMapping(String mappingCode) throws NotExistsMappingException {

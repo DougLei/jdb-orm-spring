@@ -12,7 +12,6 @@ import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.store.NotExistsMappingException;
 import com.douglei.orm.configuration.environment.mapping.store.RepeatedMappingException;
-import com.douglei.orm.context.EnvironmentContext;
 import com.douglei.tools.utils.Collections;
 
 /**
@@ -22,29 +21,16 @@ import com.douglei.tools.utils.Collections;
 public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	private static final Logger logger = LoggerFactory.getLogger(SpringRedisMappingStoreImpl.class);
 
-	// 清空映射
-	private void clearMapping() {
-		removeMapping(template.keys(getPrefix() + "*"));
-	}
-	
 	@Override
-	public void initializeStore(int size) {
-		if(EnvironmentContext.getEnvironmentProperty().clearMappingOnStart()) {
-			clearMapping();
-		}
+	public void clearStore() {
+		removeMapping(template.keys(getPrefix() + "*"));
 	}
 	
 	@Override
 	public void addMapping(Mapping mapping) throws RepeatedMappingException{
 		String code = getCode(mapping.getCode());
 		if(mappingExists(code)) {
-			if(EnvironmentContext.getEnvironmentProperty().clearMappingOnStart()) {
-				throw new RepeatedMappingException("已经存在相同code为["+mapping.getCode()+"]的映射对象: " + getMapping(mapping.getCode()));
-			}
-			if(logger.isDebugEnabled()) {
-				logger.debug("启动时, 已经存在相同code为[{}]的映射对象: ", mapping.getCode(), getMapping(mapping.getCode()));
-			}
-			return;
+			throw new RepeatedMappingException("已经存在相同code为["+mapping.getCode()+"]的映射对象: " + getMapping(mapping.getCode()));
 		}
 		template.opsForValue().set(code, mapping);
 	}
@@ -52,15 +38,7 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	@Override
 	public void addMapping(Collection<Mapping> mappings) throws RepeatedMappingException {
 		if(Collections.unEmpty(mappings)) {
-			template.executePipelined(new RedisCallback<Object>() {
-				@Override
-				public Object doInRedis(RedisConnection connection) throws DataAccessException {
-					for (Mapping mapping : mappings) {
-						connection.set(keySerializer.serialize(getCode(mapping.getCode())), valueSerializer.serialize(mapping));
-					}
-					return null;
-				}
-			});
+			mappings.forEach(mapping -> addMapping(mapping));
 		}
 	}
 
@@ -72,25 +50,6 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 		}
 		template.opsForValue().set(code, mapping);
 	}
-	
-	// 目前使用不上批量覆盖映射功能
-//	@Override
-//	public void addOrCoverMapping(Collection<Mapping> mappings) {
-//		if(Collections.unEmpty(mappings)) {
-//			template.executePipelined(new RedisCallback<Object>() {
-//				@Override
-//				public Object doInRedis(RedisConnection connection) throws DataAccessException {
-//					for (Mapping mapping : mappings) {
-//						if(logger.isDebugEnabled() && mappingExists(getCode(mapping.getCode()))) {
-//							logger.debug("覆盖已经存在code为[{}]的映射对象: {}", mapping.getCode(), getMapping(mapping.getCode()));
-//						}
-//						connection.set(keySerializer.serialize(getCode(mapping.getCode())), valueSerializer.serialize(mapping));
-//					}
-//					return null;
-//				}
-//			});
-//		}
-//	}
 	
 	@Override
 	public Mapping removeMapping(String mappingCode) throws NotExistsMappingException {
@@ -132,7 +91,7 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	
 	@Override
 	public void destroy() throws DestroyException {
-		clearMapping();
+		clearStore();
 		template = null;
 	}
 }

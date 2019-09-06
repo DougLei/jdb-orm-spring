@@ -91,7 +91,9 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	
 	@Override
 	public void destroy() throws DestroyException {
+		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
 		clearStore();
 		template = null;
+		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}
 }

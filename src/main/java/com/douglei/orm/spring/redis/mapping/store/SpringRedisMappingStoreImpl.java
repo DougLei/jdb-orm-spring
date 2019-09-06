@@ -52,23 +52,23 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	}
 	
 	@Override
-	public Mapping removeMapping(String mappingCode) throws NotExistsMappingException {
-		String code = getCode(mappingCode);
+	public Mapping removeMapping(String code) throws NotExistsMappingException {
+		code = getCode(code);
 		if(mappingExists(code)) {
 			Mapping mapping = (Mapping) template.opsForValue().get(code);
 			template.delete(code);
 			return mapping;
 		}
-		throw new NotExistsMappingException("不存在code为["+mappingCode+"]的映射对象, 无法删除");
+		throw new NotExistsMappingException("不存在code为["+code+"]的映射对象, 无法删除");
 	}
 	
 	@Override
-	public void removeMapping(Collection<String> mappingCodes) throws NotExistsMappingException {
-		if(Collections.unEmpty(mappingCodes)) {
+	public void removeMapping(Collection<String> codes) throws NotExistsMappingException {
+		if(Collections.unEmpty(codes)) {
 			template.execute(new RedisCallback<Object>() {
 				@Override
 				public Object doInRedis(RedisConnection connection) throws DataAccessException {
-					connection.del(getCodeByteArray(mappingCodes));
+					connection.del(getCodeByteArray(codes));
 					return null;
 				}
 			});
@@ -76,17 +76,17 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	}
 	
 	@Override
-	public Mapping getMapping(String mappingCode) throws NotExistsMappingException {
-		Object mapping = template.opsForValue().get(getCode(mappingCode));
+	public Mapping getMapping(String code) throws NotExistsMappingException {
+		Object mapping = template.opsForValue().get(getCode(code));
 		if(mapping == null) {
-			throw new NotExistsMappingException("不存在code为["+mappingCode+"]的映射对象");
+			throw new NotExistsMappingException("不存在code为["+code+"]的映射对象");
 		}
 		return (Mapping) mapping;
 	}
 	
 	@Override
-	public boolean mappingExists(String mappingCode) {
-		return template.hasKey(mappingCode);
+	public boolean mappingExists(String code) {
+		return template.hasKey(code);
 	}
 	
 	@Override

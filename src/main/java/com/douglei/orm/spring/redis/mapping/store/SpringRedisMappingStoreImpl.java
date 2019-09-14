@@ -52,18 +52,18 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	}
 	
 	@Override
-	public Mapping removeMapping(String code) throws NotExistsMappingException {
+	public Mapping removeMapping(String code) {
 		code = getCode(code);
 		if(mappingExists(code)) {
 			Mapping mapping = (Mapping) template.opsForValue().get(code);
 			template.delete(code);
 			return mapping;
 		}
-		throw new NotExistsMappingException("不存在code为["+code+"]的映射对象, 无法删除");
+		return null;
 	}
 	
 	@Override
-	public void removeMapping(Collection<String> codes) throws NotExistsMappingException {
+	public void removeMapping(Collection<String> codes) {
 		if(Collections.unEmpty(codes)) {
 			template.execute(new RedisCallback<Object>() {
 				@Override

@@ -52,35 +52,42 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 	 * @throws BeansException 
 	 */
 	private void doAutowired(ProxyBean proxyBean) throws BeansException, IllegalArgumentException, IllegalAccessException {
-		Field[] fields = transactionComponentClass.getDeclaredFields();
-		for (Field field : fields) {
-			if(field.isAnnotationPresent(Autowired.class)) {
-				if(field.getType().isInterface()) { // 如果属性是接口
-					if(ValidationUtil.isImplementInterface(field.getType(), this.transactionComponentClass.getInterfaces())) { // 判断被代理对象是否实现该接口, 如果实现, 则将代理对象注入, 否则放弃注入, 记录日志
-						if(logger.isDebugEnabled()) {
-							logger.debug("[{}]类实现了[{}]接口, 将代理对象注入该接口属性", transactionComponentClass.getName(), field.getType().getName());
+		Class<?> clz = transactionComponentClass;
+		Field[] fields;
+		do {
+			fields = clz.getDeclaredFields();
+			if(fields.length > 0) {
+				for (Field field : fields) {
+					if(field.isAnnotationPresent(Autowired.class)) {
+						if(field.getType().isInterface()) { // 如果属性是接口
+							if(ValidationUtil.isImplementInterface(field.getType(), this.transactionComponentClass.getInterfaces())) { // 判断被代理对象是否实现该接口, 如果实现, 则将代理对象注入, 否则放弃注入, 记录日志
+								if(logger.isDebugEnabled()) {
+									logger.debug("[{}]类实现了[{}]接口, 将代理对象注入该接口属性", transactionComponentClass.getName(), field.getType().getName());
+								}
+								setValue(field, proxyBean.getOriginObject(), proxyBean.getProxy());
+								continue;
+							}
+							if(logger.isDebugEnabled()) {
+								logger.debug("[{}]类没有实现[{}]接口, 无法给该接口属性注入实例", transactionComponentClass.getName(), field.getType().getName());
+							}
+						}else { // 否则属性是类
+							if(field.getType() == transactionComponentClass) { // 如果属性类型与被代理对象类型一致, 则将代理对象注入
+								if(logger.isDebugEnabled()) {
+									logger.debug("属性[{}]的类型[{}]与被代理对象[{}]的类型一致, 将代理对象注入该属性", field.getName(), field.getType().getName(), transactionComponentClass.getName());
+								}
+								setValue(field, proxyBean.getOriginObject(), proxyBean.getProxy());
+							}else { // 否则是其他对象, 则去spring容器中寻找并注入
+								if(logger.isDebugEnabled()) {
+									logger.debug("属性[{}]的类型为[{}], 在spring容器中寻找相应的实例并注入该属性", field.getName(), field.getType().getName());
+								}
+								setValue(field, proxyBean.getOriginObject(), applicationContext.getBean(field.getType()));
+							}
 						}
-						setValue(field, proxyBean.getOriginObject(), proxyBean.getProxy());
-						continue;
-					}
-					if(logger.isDebugEnabled()) {
-						logger.debug("[{}]类没有实现[{}]接口, 无法给该接口属性注入实例", transactionComponentClass.getName(), field.getType().getName());
-					}
-				}else { // 否则属性是类
-					if(field.getType() == transactionComponentClass) { // 如果属性类型与被代理对象类型一致, 则将代理对象注入
-						if(logger.isDebugEnabled()) {
-							logger.debug("属性[{}]的类型[{}]与被代理对象[{}]的类型一致, 将代理对象注入该属性", field.getName(), field.getType().getName(), transactionComponentClass.getName());
-						}
-						setValue(field, proxyBean.getOriginObject(), proxyBean.getProxy());
-					}else { // 否则是其他对象, 则去spring容器中寻找并注入
-						if(logger.isDebugEnabled()) {
-							logger.debug("属性[{}]的类型为[{}], 在spring容器中寻找相应的实例并注入该属性", field.getName(), field.getType().getName());
-						}
-						setValue(field, proxyBean.getOriginObject(), applicationContext.getBean(field.getType()));
 					}
 				}
 			}
-		}
+			clz = clz.getSuperclass();
+		} while(clz != Object.class);
 	}
 
 	/**

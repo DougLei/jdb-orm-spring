@@ -31,7 +31,7 @@
 	<!-- 配置数据源, 获取SessionFactoryHandlerHolder实例 -->
 	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryRegisterHolder" scope="singleton"><!-- 必须配置 -->
 		<property name="sessionFactoryRegister" ref="sessionFactoryRegister"></property><!-- 必须配置 -->
-		<property name="defaultSessionFactory" value="defaultConfiguration"></property><!-- 必须配置 -->
+		<property name="defaultSessionFactory" ref="defaultConfiguration"></property><!-- 必须配置 -->
 		
 		<!-- 配置多数据源, 非必须配置 -->
 		<property name="sessionFactories">

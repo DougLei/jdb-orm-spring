@@ -12,7 +12,7 @@ import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
 import com.douglei.orm.configuration.environment.mapping.store.NotExistsMappingException;
 import com.douglei.orm.configuration.environment.mapping.store.RepeatedMappingException;
-import com.douglei.tools.utils.Collections;
+import com.douglei.tools.utils.CollectionUtil;
 
 /**
  * 
@@ -37,7 +37,7 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	
 	@Override
 	public void addMapping(Collection<Mapping> mappings) throws RepeatedMappingException {
-		if(Collections.unEmpty(mappings)) {
+		if(CollectionUtil.unEmpty(mappings)) {
 			mappings.forEach(mapping -> addMapping(mapping));
 		}
 	}
@@ -64,7 +64,7 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	
 	@Override
 	public void removeMapping(Collection<String> codes) {
-		if(Collections.unEmpty(codes)) {
+		if(CollectionUtil.unEmpty(codes)) {
 			template.execute(new RedisCallback<Object>() {
 				@Override
 				public Object doInRedis(RedisConnection connection) throws DataAccessException {

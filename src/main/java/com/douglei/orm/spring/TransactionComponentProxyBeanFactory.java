@@ -60,7 +60,7 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 				for (Field field : fields) {
 					if(field.isAnnotationPresent(Autowired.class)) {
 						if(field.getType().isInterface()) { // 如果属性是接口
-							if(ValidationUtil.isImplementInterface(field.getType(), this.transactionComponentClass.getInterfaces())) { // 判断被代理对象是否实现该接口, 如果实现, 则将代理对象注入, 否则放弃注入, 记录日志
+							if(ValidationUtil.isImplementInterface(this.transactionComponentClass, field.getType())) { // 判断被代理对象是否实现该接口, 如果实现, 则将代理对象注入, 否则放弃注入, 记录日志
 								if(logger.isDebugEnabled()) {
 									logger.debug("[{}]类实现了[{}]接口, 将代理对象注入该接口属性", transactionComponentClass.getName(), field.getType().getName());
 								}

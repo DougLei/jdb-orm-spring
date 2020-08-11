@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
-import com.douglei.orm.context.transaction.component.TransactionAnnotationMemoryUsage;
+import com.douglei.orm.context.transaction.component.TransactionAnnotationScanner;
 import com.douglei.orm.context.transaction.component.TransactionComponentEntity;
 
 /**
@@ -23,7 +23,7 @@ public class TransactionComponentRegister2Spring {
 	 * @param transactionComponentPackages
 	 */
 	protected void register2Spring(BeanDefinitionRegistry registry, boolean searchAll, String[] transactionComponentPackages) {
-		List<TransactionComponentEntity> transactionComponentEntities = TransactionAnnotationMemoryUsage.scanTransactionComponent(searchAll, transactionComponentPackages);
+		List<TransactionComponentEntity> transactionComponentEntities = TransactionAnnotationScanner.scan(searchAll, transactionComponentPackages);
 		
 		Class<?> transactionComponentProxyBeanFactoryClass = TransactionComponentProxyBeanFactory.class;
 		GenericBeanDefinition definition = null;

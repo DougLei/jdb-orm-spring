@@ -19,7 +19,7 @@ public class SessionFactoryRegisterHolder {
 	 * @param defaultConfiguration
 	 */
 	public void setDefaultSessionFactory(ConfigurationWrapper defaultConfiguration) {
-		sessionFactoryRegister.registerDefaultSessionFactory(defaultConfiguration.getConfigurationFile(), defaultConfiguration.getDataSource(), defaultConfiguration.getMappingStore(), false);
+		sessionFactoryRegister.registerSessionFactoryByFile(defaultConfiguration.getConfigurationFile(), defaultConfiguration.getDataSource(), defaultConfiguration.getMappingStore());
 	}
 	
 	/**
@@ -29,7 +29,7 @@ public class SessionFactoryRegisterHolder {
 	public void setSessionFactories(ConfigurationWrapper... configurations) {
 		if(configurations.length > 0) {
 			for (ConfigurationWrapper configuration : configurations) {
-				sessionFactoryRegister.registerSessionFactoryByConfigurationFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingStore());
+				sessionFactoryRegister.registerSessionFactoryByFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingStore());
 			}
 		}
 	}

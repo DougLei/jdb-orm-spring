@@ -1,6 +1,6 @@
 package com.douglei.orm.spring.redis.mapping.store;
 
-import java.util.Collection;
+import java.util.Set;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +10,6 @@ import org.springframework.data.redis.core.RedisCallback;
 
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.orm.configuration.environment.mapping.store.NotExistsMappingException;
-import com.douglei.orm.configuration.environment.mapping.store.RepeatedMappingException;
 import com.douglei.tools.utils.CollectionUtil;
 
 /**
@@ -22,48 +20,8 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	private static final Logger logger = LoggerFactory.getLogger(SpringRedisMappingStoreImpl.class);
 
 	@Override
-	public void clearStore() {
-		removeMapping(template.keys(getPrefix() + "*"));
-	}
-	
-	@Override
-	public void addMapping(Mapping mapping) throws RepeatedMappingException{
-		String code = getCode(mapping.getCode());
-		if(mappingExists(code)) {
-			throw new RepeatedMappingException("已经存在相同code为["+mapping.getCode()+"]的映射对象: " + getMapping(mapping.getCode()));
-		}
-		template.opsForValue().set(code, mapping);
-	}
-	
-	@Override
-	public void addMapping(Collection<Mapping> mappings) throws RepeatedMappingException {
-		if(CollectionUtil.unEmpty(mappings)) {
-			mappings.forEach(mapping -> addMapping(mapping));
-		}
-	}
-
-	@Override
-	public void addOrCoverMapping(Mapping mapping) {
-		String code = getCode(mapping.getCode());
-		if(logger.isDebugEnabled() && mappingExists(code)) {
-			logger.debug("覆盖已经存在code为[{}]的映射对象: {}", mapping.getCode(), getMapping(mapping.getCode()));
-		}
-		template.opsForValue().set(code, mapping);
-	}
-	
-	@Override
-	public Mapping removeMapping(String code) {
-		code = getCode(code);
-		if(mappingExists(code)) {
-			Mapping mapping = (Mapping) template.opsForValue().get(code);
-			template.delete(code);
-			return mapping;
-		}
-		return null;
-	}
-	
-	@Override
-	public void removeMapping(Collection<String> codes) {
+	public void clear() {
+		Set<String> codes = template.keys(getPrefix() + "*");
 		if(CollectionUtil.unEmpty(codes)) {
 			template.execute(new RedisCallback<Object>() {
 				@Override
@@ -76,12 +34,30 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	}
 	
 	@Override
-	public Mapping getMapping(String code) throws NotExistsMappingException {
-		Object mapping = template.opsForValue().get(getCode(code));
-		if(mapping == null) {
-			throw new NotExistsMappingException("不存在code为["+code+"]的映射对象");
+	public Mapping addMapping(Mapping mapping) {
+		String code = getCode(mapping.getCode());
+		Mapping exMapping = getMapping(code);
+		if(logger.isDebugEnabled() && exMapping != null) {
+			logger.debug("覆盖已经存在code为[{}]的映射对象: {}", mapping.getCode(), getMapping(mapping.getCode()));
 		}
-		return (Mapping) mapping;
+		template.opsForValue().set(code, mapping);
+		return exMapping;
+	}
+	
+	@Override
+	public Mapping deleteMapping(String code) {
+		code = getCode(code);
+		if(mappingExists(code)) {
+			Mapping mapping = (Mapping) template.opsForValue().get(code);
+			template.delete(code);
+			return mapping;
+		}
+		return null;
+	}
+	
+	@Override
+	public Mapping getMapping(String code) {
+		return (Mapping) template.opsForValue().get(getCode(code));
 	}
 	
 	@Override
@@ -92,7 +68,7 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	@Override
 	public void destroy() throws DestroyException {
 		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
-		clearStore();
+		clear();
 		template = null;
 		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}

@@ -1,5 +1,6 @@
 package com.douglei.orm.spring;
 
+import com.douglei.orm.context.IdDuplicateException;
 import com.douglei.orm.context.SessionFactoryRegister;
 
 
@@ -17,19 +18,21 @@ public class SessionFactoryRegisterHolder {
 	/**
 	 * 设置默认的SessionFactory
 	 * @param defaultConfiguration
+	 * @throws IdDuplicateException 
 	 */
-	public void setDefaultSessionFactory(ConfigurationWrapper defaultConfiguration) {
-		sessionFactoryRegister.registerSessionFactoryByFile(defaultConfiguration.getConfigurationFile(), defaultConfiguration.getDataSource(), defaultConfiguration.getMappingStore());
+	public void setDefaultSessionFactory(ConfigurationWrapper defaultConfiguration) throws IdDuplicateException {
+		sessionFactoryRegister.registerByFile(defaultConfiguration.getConfigurationFile(), defaultConfiguration.getDataSource(), defaultConfiguration.getMappingStore());
 	}
 	
 	/**
 	 * 【多数据源】设置SessionFactory
 	 * @param configurations
+	 * @throws IdDuplicateException 
 	 */
-	public void setSessionFactories(ConfigurationWrapper... configurations) {
+	public void setSessionFactories(ConfigurationWrapper... configurations) throws IdDuplicateException {
 		if(configurations.length > 0) {
 			for (ConfigurationWrapper configuration : configurations) {
-				sessionFactoryRegister.registerSessionFactoryByFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingStore());
+				sessionFactoryRegister.registerByFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingStore());
 			}
 		}
 	}

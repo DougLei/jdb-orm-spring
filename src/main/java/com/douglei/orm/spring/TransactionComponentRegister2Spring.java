@@ -24,25 +24,26 @@ public class TransactionComponentRegister2Spring {
 	 */
 	protected void register2Spring(BeanDefinitionRegistry registry, boolean searchAll, String[] transactionComponentPackages) {
 		List<TransactionComponentEntity> transactionComponentEntities = TransactionAnnotationScanner.scan(searchAll, transactionComponentPackages);
-		
-		Class<?> transactionComponentProxyBeanFactoryClass = TransactionComponentProxyBeanFactory.class;
-		GenericBeanDefinition definition = null;
-		for (TransactionComponentEntity transactionComponentEntity : transactionComponentEntities) {
-			logger.debug("注册事物组件代理实体: {}", transactionComponentEntity);
-			
-			definition = new GenericBeanDefinition();
-			
-			// 设置该bean的class为TransactionBeanFactory类
-			definition.setBeanClass(transactionComponentProxyBeanFactoryClass);
-			
-			// 将参数传递给TransactionBeanFactory类的构造函数
-			definition.getConstructorArgumentValues().addGenericArgumentValue(transactionComponentEntity);
-			
-			// 设置根据类型注入
-			definition.setAutowireMode(GenericBeanDefinition.AUTOWIRE_BY_TYPE);
-			
-			// 将bean注入到spring容器中
-			registry.registerBeanDefinition(transactionComponentEntity.getTransactionComponentClass().getSimpleName(), definition);
+		if(!transactionComponentEntities.isEmpty()) {
+			Class<?> transactionComponentProxyBeanFactoryClass = TransactionComponentProxyBeanFactory.class;
+			GenericBeanDefinition definition = null;
+			for (TransactionComponentEntity transactionComponentEntity : transactionComponentEntities) {
+				logger.debug("注册事物组件代理实体: {}", transactionComponentEntity);
+				
+				definition = new GenericBeanDefinition();
+				
+				// 设置该bean的class为TransactionBeanFactory类
+				definition.setBeanClass(transactionComponentProxyBeanFactoryClass);
+				
+				// 将参数传递给TransactionBeanFactory类的构造函数
+				definition.getConstructorArgumentValues().addGenericArgumentValue(transactionComponentEntity);
+				
+				// 设置根据类型注入
+				definition.setAutowireMode(GenericBeanDefinition.AUTOWIRE_BY_TYPE);
+				
+				// 将bean注入到spring容器中
+				registry.registerBeanDefinition(transactionComponentEntity.getTransactionComponentClass().getSimpleName(), definition);
+			}
 		}
 	}
 }

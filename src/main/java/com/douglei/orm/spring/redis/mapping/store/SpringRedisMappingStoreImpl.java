@@ -47,7 +47,7 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	@Override
 	public Mapping deleteMapping(String code) {
 		code = getCode(code);
-		if(mappingExists(code)) {
+		if(exists(code)) {
 			Mapping mapping = (Mapping) template.opsForValue().get(code);
 			template.delete(code);
 			return mapping;
@@ -61,7 +61,7 @@ public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
 	}
 	
 	@Override
-	public boolean mappingExists(String code) {
+	public boolean exists(String code) {
 		return template.hasKey(code);
 	}
 	

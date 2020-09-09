@@ -16,14 +16,14 @@
 	<bean id="defaultConfiguration" class="com.douglei.orm.spring.ConfigurationWrapper" scope="prototype">
 		<property name="configurationFile" value="jdb-orm.conf.xml"></property><!-- 必须配置 -->
 		<property name="dataSource" ref="dataSource"></property><!-- 可以不配置, 在jdb-orm中配置数据源 -->
-		<property name="mappingStore" ref="application"></property><!-- 可以不配置 -->
+		<property name="mappingContainer" ref="application"></property><!-- 可以不配置 -->
 	</bean>
 	
 	<!-- 非必须配置, 多数据源也需要配置com.douglei.orm.spring.ConfigurationWrapper, 配置的方式和上面一致 -->
 	<bean id="multiConfiguration1" class="com.douglei.orm.spring.ConfigurationWrapper" scope="prototype">
 		<property name="configurationFile" value="xxxx.xml"></property><!-- 必须配置 -->
 		<property name="dataSource" ref="dataSource"></property><!-- 可以不配置, 在jdb-orm中配置数据源 -->
-		<property name="mappingStore" ref="redisTemplateStore"></property><!-- 可以不配置 -->
+		<property name="mappingContainer" ref="redisTemplateContainer"></property><!-- 可以不配置 -->
 	</bean>
 	
 	<!-- 必须配置, 配置sessionFactory注册器实例, 单例 -->
@@ -75,8 +75,8 @@
 		<constructor-arg name="timeout" value="10000"></constructor-arg>
 		<constructor-arg name="password" value="douglei"></constructor-arg>
 	</bean>
-	<!-- 配置redis方式的映射存储对象, 给com.douglei.orm.spring.ConfigurationWrapper的mappingStore使用 -->
-	<bean id="redisStore" class="com.douglei.orm.configuration.environment.mapping.store.impl.redis.RedisMappingStore">
+	<!-- 配置redis方式的映射存储对象, 给com.douglei.orm.spring.ConfigurationWrapper的mappingContainer使用 -->
+	<bean id="redisStore" class="com.douglei.orm.configuration.environment.mapping.store.impl.redis.RedisMappingContainer">
 		<property name="redisPool" ref="reidsPool"></property>
 	</bean>
 	
@@ -113,7 +113,7 @@
     </bean>
     
     <!-- 配置redis存储映射实例 -->
-	<bean id="redisTemplateStore" class="com.douglei.orm.spring.redis.mapping.store.SpringRedisMappingStoreImpl">
+	<bean id="redisTemplateContainer" class="com.douglei.orm.spring.redis.mapping.store.SpringRedisMappingContainerImpl">
 		<property name="template" ref="redisTemplate"></property>
 		<property name="multiDataSource" value="true"></property><!-- 非必须配置, 默认值为false -->
 	</bean>    

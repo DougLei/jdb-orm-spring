@@ -3,14 +3,15 @@ package com.douglei.orm.spring.redis.mapping.store;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.RedisSerializer;
 
-import com.douglei.orm.configuration.environment.mapping.store.MappingStore;
-import com.douglei.orm.configuration.environment.mapping.store.impl.redis.RedisHandler;
+import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
+import com.douglei.orm.configuration.environment.mapping.container.impl.redis.RedisHandler;
+
 
 /**
  * 
  * @author DougLei
  */
-public abstract class SpringRedisMappingStore extends RedisHandler implements MappingStore {
+public abstract class SpringRedisMappingContainer extends RedisHandler implements MappingContainer {
 
 	protected RedisTemplate<String, Object> template;
 	protected RedisSerializer<String> keySerializer;

@@ -21,7 +21,7 @@ public class SessionFactoryRegisterHolder {
 	 * @throws IdDuplicateException 
 	 */
 	public void setDefaultSessionFactory(ConfigurationWrapper defaultConfiguration) throws IdDuplicateException {
-		sessionFactoryRegister.registerByFile(defaultConfiguration.getConfigurationFile(), defaultConfiguration.getDataSource(), defaultConfiguration.getMappingStore());
+		sessionFactoryRegister.registerByFile(defaultConfiguration.getConfigurationFile(), defaultConfiguration.getDataSource(), defaultConfiguration.getMappingContainer());
 	}
 	
 	/**
@@ -32,7 +32,7 @@ public class SessionFactoryRegisterHolder {
 	public void setSessionFactories(ConfigurationWrapper... configurations) throws IdDuplicateException {
 		if(configurations.length > 0) {
 			for (ConfigurationWrapper configuration : configurations) {
-				sessionFactoryRegister.registerByFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingStore());
+				sessionFactoryRegister.registerByFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingContainer());
 			}
 		}
 	}

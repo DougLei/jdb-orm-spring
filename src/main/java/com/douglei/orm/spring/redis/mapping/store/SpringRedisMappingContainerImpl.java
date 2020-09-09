@@ -16,8 +16,8 @@ import com.douglei.tools.utils.CollectionUtil;
  * 
  * @author DougLei
  */
-public class SpringRedisMappingStoreImpl extends SpringRedisMappingStore {
-	private static final Logger logger = LoggerFactory.getLogger(SpringRedisMappingStoreImpl.class);
+public class SpringRedisMappingContainerImpl extends SpringRedisMappingContainer {
+	private static final Logger logger = LoggerFactory.getLogger(SpringRedisMappingContainerImpl.class);
 
 	@Override
 	public void clear() {

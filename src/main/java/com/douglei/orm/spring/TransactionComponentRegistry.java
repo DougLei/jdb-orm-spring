@@ -15,7 +15,7 @@ public class TransactionComponentRegistry extends TransactionComponentRegister2S
 	/**
 	 * 是否扫描所有符合添加的包, 不论是否在jar包中
 	 */
-	private boolean searchAll;
+	private boolean scanAll;
 	
 	/**
 	 * 要扫描的事务组件包路径
@@ -35,11 +35,11 @@ public class TransactionComponentRegistry extends TransactionComponentRegister2S
 
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-		register2Spring(registry, searchAll, transactionComponentPackages);
+		register2Spring(registry, scanAll, transactionComponentPackages);
 	}
 	
-	public void setSearchAll(boolean searchAll) {
-		this.searchAll = searchAll;
+	public void setScanAll(boolean scanAll) {
+		this.scanAll = scanAll;
 	}
 	public void setTransactionComponentPackages(String[] transactionComponentPackages) {
 		this.transactionComponentPackages = transactionComponentPackages;

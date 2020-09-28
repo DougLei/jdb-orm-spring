@@ -43,7 +43,7 @@
 	<!-- 配置扫务组件的注册器实例 -->
 	<bean id="transactionComponentRegistry" class="com.douglei.orm.spring.TransactionComponentRegistry" scope="singleton"><!-- 必须配置 -->
 		<!-- 是否扫描所有符合添加的包, 不论是否在jar包中, 默认为false -->
-		<property name="searchAll" value="false"></property>
+		<property name="scanAll" value="false"></property>
 		<!-- 指定要扫描的base package路径 -->
 		<property name="transactionComponentPackages"><!-- 必须配置 -->
 			<array>

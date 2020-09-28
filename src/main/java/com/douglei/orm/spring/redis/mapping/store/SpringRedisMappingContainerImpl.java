@@ -10,7 +10,6 @@ import org.springframework.data.redis.core.RedisCallback;
 
 import com.douglei.orm.configuration.DestroyException;
 import com.douglei.orm.configuration.environment.mapping.Mapping;
-import com.douglei.tools.utils.CollectionUtil;
 
 /**
  * 
@@ -22,7 +21,7 @@ public class SpringRedisMappingContainerImpl extends SpringRedisMappingContainer
 	@Override
 	public void clear() {
 		Set<String> codes = template.keys(getPrefix() + "*");
-		if(CollectionUtil.unEmpty(codes)) {
+		if(codes != null && !codes.isEmpty()) {
 			template.execute(new RedisCallback<Object>() {
 				@Override
 				public Object doInRedis(RedisConnection connection) throws DataAccessException {

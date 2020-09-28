@@ -26,11 +26,8 @@
 		<property name="mappingContainer" ref="redisTemplateContainer"></property><!-- 可以不配置 -->
 	</bean>
 	
-	<!-- 必须配置, 配置sessionFactory注册器实例, 单例 -->
-	<bean id="sessionFactoryRegister" class="com.douglei.orm.context.SessionFactoryRegister" scope="singleton" />
 	<!-- 配置数据源, 获取SessionFactoryHandlerHolder实例 -->
-	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryRegisterHolder" scope="singleton"><!-- 必须配置 -->
-		<property name="sessionFactoryRegister" ref="sessionFactoryRegister"></property><!-- 必须配置 -->
+	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryContainerHolder" scope="singleton"><!-- 必须配置 -->
 		<property name="defaultSessionFactory" ref="defaultConfiguration"></property><!-- 必须配置 -->
 		
 		<!-- 配置多数据源, 非必须配置 -->

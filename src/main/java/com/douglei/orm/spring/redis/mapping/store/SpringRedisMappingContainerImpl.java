@@ -8,8 +8,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 
-import com.douglei.orm.configuration.DestroyException;
-import com.douglei.orm.configuration.environment.mapping.Mapping;
+import com.douglei.orm.mapping.Mapping;
 
 /**
  * 
@@ -62,13 +61,5 @@ public class SpringRedisMappingContainerImpl extends SpringRedisMappingContainer
 	@Override
 	public boolean exists(String code) {
 		return template.hasKey(code);
-	}
-	
-	@Override
-	public void destroy() throws DestroyException {
-		if(logger.isDebugEnabled()) logger.debug("{} 开始 destroy", getClass().getName());
-		clear();
-		template = null;
-		if(logger.isDebugEnabled()) logger.debug("{} 结束 destroy", getClass().getName());
 	}
 }

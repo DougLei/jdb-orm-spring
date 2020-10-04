@@ -2,8 +2,8 @@ package com.douglei.orm.spring.redis.mapping.store;
 
 import org.springframework.data.redis.core.RedisTemplate;
 
-import com.douglei.orm.configuration.environment.mapping.container.MappingContainer;
-import com.douglei.orm.configuration.environment.mapping.container.impl.redis.RedisHandler;
+import com.douglei.orm.mapping.container.MappingContainer;
+import com.douglei.orm.mapping.container.impl.redis.RedisHandler;
 
 
 /**

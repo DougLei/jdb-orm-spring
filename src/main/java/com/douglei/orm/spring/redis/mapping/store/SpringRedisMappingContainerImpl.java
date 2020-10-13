@@ -9,6 +9,7 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 
 import com.douglei.orm.mapping.Mapping;
+import com.douglei.orm.mapping.MappingFeature;
 
 /**
  * 
@@ -32,25 +33,50 @@ public class SpringRedisMappingContainerImpl extends SpringRedisMappingContainer
 	}
 	
 	@Override
+	public MappingFeature addMappingFeature(MappingFeature mappingFeature) {
+		MappingFeature exMappingFeature = getMappingFeature(mappingFeature.getCode());
+		if(logger.isDebugEnabled() && exMappingFeature != null) 
+			logger.debug("覆盖code为[{}]的映射特性: {}", mappingFeature.getCode(), exMappingFeature);
+		
+		template.opsForValue().set(getCode4Feature(mappingFeature.getCode()), mappingFeature);
+		return exMappingFeature;
+	}
+
+	@Override
+	public MappingFeature deleteMappingFeature(String code) {
+		if(!exists(code)) 
+			return null;
+		
+		code = getCode4Feature(code);
+		MappingFeature mappingFeature = (MappingFeature) template.opsForValue().get(code);
+		template.delete(code);
+		return mappingFeature;
+	}
+
+	@Override
+	public MappingFeature getMappingFeature(String code) {
+		return (MappingFeature) template.opsForValue().get(getCode4Feature(code));
+	}
+	
+	@Override
 	public Mapping addMapping(Mapping mapping) {
-		String code = getCode(mapping.getCode());
-		Mapping exMapping = getMapping(code);
-		if(logger.isDebugEnabled() && exMapping != null) {
-			logger.debug("覆盖已经存在code为[{}]的映射对象: {}", mapping.getCode(), getMapping(mapping.getCode()));
-		}
-		template.opsForValue().set(code, mapping);
+		Mapping exMapping = getMapping(mapping.getCode());
+		if(logger.isDebugEnabled() && exMapping != null) 
+			logger.debug("覆盖code为[{}]的映射: {}", mapping.getCode(), exMapping);
+		
+		template.opsForValue().set(getCode(mapping.getCode()), mapping);
 		return exMapping;
 	}
 	
 	@Override
 	public Mapping deleteMapping(String code) {
+		if(!exists(code)) 
+			return null;
+		
 		code = getCode(code);
-		if(exists(code)) {
-			Mapping mapping = (Mapping) template.opsForValue().get(code);
-			template.delete(code);
-			return mapping;
-		}
-		return null;
+		Mapping mapping = (Mapping) template.opsForValue().get(code);
+		template.delete(code);
+		return mapping;
 	}
 	
 	@Override
@@ -60,6 +86,6 @@ public class SpringRedisMappingContainerImpl extends SpringRedisMappingContainer
 	
 	@Override
 	public boolean exists(String code) {
-		return template.hasKey(code);
+		return template.hasKey(getCode(code));
 	}
 }

@@ -9,7 +9,7 @@ import org.springframework.data.redis.connection.RedisConnection;
 import org.springframework.data.redis.core.RedisCallback;
 
 import com.douglei.orm.mapping.Mapping;
-import com.douglei.orm.mapping.MappingFeature;
+import com.douglei.orm.mapping.MappingProperty;
 
 /**
  * 
@@ -33,29 +33,29 @@ public class SpringRedisMappingContainerImpl extends SpringRedisMappingContainer
 	}
 	
 	@Override
-	public MappingFeature addMappingFeature(MappingFeature mappingFeature) {
-		MappingFeature exMappingFeature = getMappingFeature(mappingFeature.getCode());
-		if(logger.isDebugEnabled() && exMappingFeature != null) 
-			logger.debug("覆盖code为[{}]的映射特性: {}", mappingFeature.getCode(), exMappingFeature);
+	public MappingProperty addMappingProperty(MappingProperty mappingProperty) {
+		MappingProperty exMappingProperty = getMappingProperty(mappingProperty.getCode());
+		if(logger.isDebugEnabled() && exMappingProperty != null) 
+			logger.debug("覆盖code为[{}]的映射属性: {}", mappingProperty.getCode(), exMappingProperty);
 		
-		template.opsForValue().set(getCode4Feature(mappingFeature.getCode()), mappingFeature);
-		return exMappingFeature;
+		template.opsForValue().set(getCode4Property(mappingProperty.getCode()), mappingProperty);
+		return exMappingProperty;
 	}
 
 	@Override
-	public MappingFeature deleteMappingFeature(String code) {
+	public MappingProperty deleteMappingProperty(String code) {
 		if(!exists(code)) 
 			return null;
 		
-		code = getCode4Feature(code);
-		MappingFeature mappingFeature = (MappingFeature) template.opsForValue().get(code);
+		code = getCode4Property(code);
+		MappingProperty mappingProperty = (MappingProperty) template.opsForValue().get(code);
 		template.delete(code);
-		return mappingFeature;
+		return mappingProperty;
 	}
 
 	@Override
-	public MappingFeature getMappingFeature(String code) {
-		return (MappingFeature) template.opsForValue().get(getCode4Feature(code));
+	public MappingProperty getMappingProperty(String code) {
+		return (MappingProperty) template.opsForValue().get(getCode4Property(code));
 	}
 	
 	@Override

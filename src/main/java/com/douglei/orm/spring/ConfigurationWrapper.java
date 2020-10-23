@@ -1,6 +1,6 @@
 package com.douglei.orm.spring;
 
-import com.douglei.orm.ExternalDataSource;
+import com.douglei.orm.configuration.ExternalDataSource;
 import com.douglei.orm.mapping.container.MappingContainer;
 
 /**

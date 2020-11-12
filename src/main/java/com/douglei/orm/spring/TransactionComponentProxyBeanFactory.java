@@ -29,7 +29,7 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 	private Class<?> transactionComponentClass;
 	public TransactionComponentProxyBeanFactory(TransactionComponentEntity transactionComponentEntity) {
 		this.transactionComponentEntity = transactionComponentEntity;
-		this.transactionComponentClass = transactionComponentEntity.getTransactionComponentClass();
+		this.transactionComponentClass = transactionComponentEntity.getClazz();
 	}
 	
 	@SuppressWarnings("unchecked")
@@ -37,7 +37,7 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 	public T getObject() throws Exception {
 		ProxyBean proxyBean = ProxyBeanContext.getProxyBean(transactionComponentClass);
 		if(proxyBean == null) {
-			proxyBean = ProxyBeanContext.createAndAddProxy(transactionComponentClass, new TransactionProxyInterceptor(transactionComponentClass, transactionComponentEntity.getTransactionMethods()));
+			proxyBean = ProxyBeanContext.createAndAddProxy(transactionComponentClass, new TransactionProxyInterceptor(transactionComponentClass, transactionComponentEntity.getMethods()));
 		}
 		doAutowired(proxyBean);
 		return (T) proxyBean.getProxy();

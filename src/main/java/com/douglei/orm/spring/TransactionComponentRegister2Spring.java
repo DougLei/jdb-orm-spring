@@ -42,7 +42,7 @@ public class TransactionComponentRegister2Spring {
 				definition.setAutowireMode(GenericBeanDefinition.AUTOWIRE_BY_TYPE);
 				
 				// 将bean注入到spring容器中
-				registry.registerBeanDefinition(transactionComponentEntity.getTransactionComponentClass().getSimpleName(), definition);
+				registry.registerBeanDefinition(transactionComponentEntity.getClazz().getSimpleName(), definition);
 			}
 		}
 	}

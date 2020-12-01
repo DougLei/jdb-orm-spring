@@ -3,7 +3,7 @@ package com.douglei.orm.spring;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 
-import com.douglei.aop.ProxyBeanContext;
+import com.douglei.aop.ProxyBeanContainer;
 
 /**
  * 销毁ProxyBeanContext监听器
@@ -16,6 +16,6 @@ public class DestroyProxyBeanContextListener implements ApplicationListener<Cont
 
 	@Override
 	public void onApplicationEvent(ContextRefreshedEvent event) {
-		ProxyBeanContext.destroy();
+		ProxyBeanContainer.destroy();
 	}
 }

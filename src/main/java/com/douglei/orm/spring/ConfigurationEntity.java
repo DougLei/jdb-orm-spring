@@ -7,11 +7,10 @@ import com.douglei.orm.mapping.MappingContainer;
  * 
  * @author DougLei
  */
-public class ConfigurationWrapper {
-	
-	protected String configurationFile;
-	protected ExternalDataSource dataSource;
-	protected MappingContainer mappingContainer;
+public class ConfigurationEntity {
+	private String configurationFile;
+	private ExternalDataSource dataSource;
+	private MappingContainer mappingContainer;
 	
 	public String getConfigurationFile() {
 		return configurationFile;

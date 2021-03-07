@@ -8,8 +8,8 @@ import org.springframework.context.ApplicationContextAware;
 
 import com.douglei.aop.ProxyBean;
 import com.douglei.aop.ProxyBeanContainer;
+import com.douglei.orm.context.TransactionComponentEntity;
 import com.douglei.orm.context.TransactionProxyInterceptor;
-import com.douglei.orm.context.transaction.component.TransactionComponentEntity;
 
 /**
  * 事物组件代理bean工厂
@@ -30,7 +30,7 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 	public T getObject() throws Exception {
 		ProxyBean proxyBean = ProxyBeanContainer.getProxyBean(transactionComponentClass);
 		if(proxyBean == null) {
-			proxyBean = ProxyBeanContainer.createAndAddProxy(transactionComponentClass, new TransactionProxyInterceptor(transactionComponentClass, entity.getMethods()));
+			proxyBean = ProxyBeanContainer.createAndAddProxy(transactionComponentClass, new TransactionProxyInterceptor(entity.getMethods()));
 			autowireCapableBeanFactory.autowireBean(proxyBean.getOriginObject());
 		}
 		return (T) proxyBean.getProxy();

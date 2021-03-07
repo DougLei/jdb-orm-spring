@@ -13,14 +13,14 @@
 	<bean id="application" class="com.douglei.orm.configuration.environment.mapping.cache.store.impl.ApplicationMappingCacheStore"></bean>
 	
 	<!-- 必须配置, 配置默认的数据源配置实例 -->
-	<bean id="defaultConfiguration" class="com.douglei.orm.spring.ConfigurationWrapper" scope="prototype">
+	<bean id="defaultConfiguration" class="com.douglei.orm.spring.ConfigurationEntity" scope="prototype">
 		<property name="configurationFile" value="jdb-orm.conf.xml"></property><!-- 必须配置 -->
 		<property name="dataSource" ref="dataSource"></property><!-- 可以不配置, 在jdb-orm中配置数据源 -->
 		<property name="mappingContainer" ref="application"></property><!-- 可以不配置 -->
 	</bean>
 	
-	<!-- 非必须配置, 多数据源也需要配置com.douglei.orm.spring.ConfigurationWrapper, 配置的方式和上面一致 -->
-	<bean id="multiConfiguration1" class="com.douglei.orm.spring.ConfigurationWrapper" scope="prototype">
+	<!-- 非必须配置, 多数据源也需要配置com.douglei.orm.spring.ConfigurationEntity, 配置的方式和上面一致 -->
+	<bean id="multiConfiguration1" class="com.douglei.orm.spring.ConfigurationEntity" scope="prototype">
 		<property name="configurationFile" value="xxxx.xml"></property><!-- 必须配置 -->
 		<property name="dataSource" ref="dataSource"></property><!-- 可以不配置, 在jdb-orm中配置数据源 -->
 		<property name="mappingContainer" ref="redisTemplateContainer"></property><!-- 可以不配置 -->

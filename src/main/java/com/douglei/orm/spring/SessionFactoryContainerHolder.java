@@ -17,11 +17,11 @@ public class SessionFactoryContainerHolder {
 	
 	/**
 	 * 设置默认的SessionFactory
-	 * @param defaultConfiguration
+	 * @param entity
 	 * @throws IdRepeatedException 
 	 */
-	public void setDefaultSessionFactory(ConfigurationWrapper defaultConfiguration) throws IdRepeatedException {
-		container.registerByFile(defaultConfiguration.getConfigurationFile(), defaultConfiguration.getDataSource(), defaultConfiguration.getMappingContainer());
+	public void setDefaultSessionFactory(ConfigurationEntity entity) throws IdRepeatedException {
+		container.registerByFile(entity.getConfigurationFile(), entity.getDataSource(), entity.getMappingContainer());
 	}
 	
 	/**
@@ -29,9 +29,9 @@ public class SessionFactoryContainerHolder {
 	 * @param configurations
 	 * @throws IdRepeatedException 
 	 */
-	public void setSessionFactories(ConfigurationWrapper... configurations) throws IdRepeatedException {
+	public void setSessionFactories(ConfigurationEntity... configurations) throws IdRepeatedException {
 		if(configurations.length > 0) {
-			for (ConfigurationWrapper configuration : configurations) {
+			for (ConfigurationEntity configuration : configurations) {
 				container.registerByFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingContainer());
 			}
 		}

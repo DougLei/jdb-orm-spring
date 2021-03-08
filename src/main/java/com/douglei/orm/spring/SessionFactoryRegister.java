@@ -5,15 +5,10 @@ import com.douglei.orm.context.SessionFactoryContainer;
 
 
 /**
- * sessionFactoryContainer实例的持有对象
+ * 
  * @author DougLei
  */
-public class SessionFactoryContainerHolder {
-	
-	private SessionFactoryContainer container;
-	public void setSessionFactoryContainer() {
-		this.container = SessionFactoryContainer.getSingleton();
-	}
+public class SessionFactoryRegister {
 	
 	/**
 	 * 设置默认的SessionFactory
@@ -21,7 +16,7 @@ public class SessionFactoryContainerHolder {
 	 * @throws IdRepeatedException 
 	 */
 	public void setDefaultSessionFactory(ConfigurationEntity entity) throws IdRepeatedException {
-		container.registerByFile(entity.getConfigurationFile(), entity.getDataSource(), entity.getMappingContainer());
+		SessionFactoryContainer.getSingleton().registerByFile(entity.getConfigurationFile(), entity.getDataSource(), entity.getMappingContainer());
 	}
 	
 	/**
@@ -31,9 +26,8 @@ public class SessionFactoryContainerHolder {
 	 */
 	public void setSessionFactories(ConfigurationEntity... configurations) throws IdRepeatedException {
 		if(configurations.length > 0) {
-			for (ConfigurationEntity configuration : configurations) {
-				container.registerByFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingContainer());
-			}
+			for (ConfigurationEntity configuration : configurations) 
+				SessionFactoryContainer.getSingleton().registerByFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingContainer());
 		}
 	}
 }

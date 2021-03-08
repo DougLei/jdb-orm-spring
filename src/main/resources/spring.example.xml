@@ -26,8 +26,8 @@
 		<property name="mappingContainer" ref="redisTemplateContainer"></property><!-- 可以不配置 -->
 	</bean>
 	
-	<!-- 配置数据源, 获取SessionFactoryHandlerHolder实例 -->
-	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryContainerHolder" scope="singleton"><!-- 必须配置 -->
+	<!-- SessionFactoryRegister -->
+	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryRegister" scope="singleton"><!-- 必须配置 -->
 		<property name="defaultSessionFactory" ref="defaultConfiguration"></property><!-- 必须配置 -->
 		
 		<!-- 配置多数据源, 非必须配置 -->
@@ -45,7 +45,7 @@
 		<!-- 是否扫描所有符合添加的包, 不论是否在jar包中, 默认为false -->
 		<property name="scanAll" value="false"></property>
 		<!-- 指定要扫描的base package路径 -->
-		<property name="transactionComponentPackages"><!-- 必须配置 -->
+		<property name="packages"><!-- 必须配置 -->
 			<array>
 				<value>com.douglei.services</value>
 				<value>com.douglei.xxx.services</value>

@@ -20,7 +20,7 @@ public class TransactionComponentRegistry extends TransactionComponentRegister2S
 	/**
 	 * 要扫描的事务组件包路径
 	 */
-	private String[] transactionComponentPackages;
+	private String[] packages;
 	 
 	@Override
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
@@ -28,20 +28,19 @@ public class TransactionComponentRegistry extends TransactionComponentRegister2S
 
 	@Override
 	public void afterPropertiesSet() throws Exception {
-		if(transactionComponentPackages == null || transactionComponentPackages.length == 0) {
-			throw new NullPointerException(getClass().getName() + " 中的transactionComponentPackages属性值不能为空");
-		}
+		if(packages == null || packages.length == 0) 
+			throw new NullPointerException(getClass().getName() + " 中的packages属性值不能为空");
 	}
 
 	@Override
 	public void postProcessBeanDefinitionRegistry(BeanDefinitionRegistry registry) throws BeansException {
-		register2Spring(registry, scanAll, transactionComponentPackages);
+		register2Spring(registry, scanAll, packages);
 	}
 	
 	public void setScanAll(boolean scanAll) {
 		this.scanAll = scanAll;
 	}
-	public void setTransactionComponentPackages(String[] transactionComponentPackages) {
-		this.transactionComponentPackages = transactionComponentPackages;
+	public void setPackages(String[] packages) {
+		this.packages = packages;
 	}
 }

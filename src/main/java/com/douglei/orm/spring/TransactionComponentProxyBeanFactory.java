@@ -33,7 +33,7 @@ public class TransactionComponentProxyBeanFactory<T> implements FactoryBean<T>, 
 			proxyBean = ProxyBeanContainer.createAndAddProxy(transactionComponentClass, new TransactionProxyInterceptor(entity.getMethods()));
 			autowireCapableBeanFactory.autowireBean(proxyBean.getOriginObject());
 		}
-		return (T) proxyBean.getProxy();
+		return (T) proxyBean.getProxyObject();
 	}
 	
 	@Override

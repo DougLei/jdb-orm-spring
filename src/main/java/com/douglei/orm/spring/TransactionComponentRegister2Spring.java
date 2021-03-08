@@ -1,14 +1,12 @@
 package com.douglei.orm.spring;
 
-import java.util.List;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.support.BeanDefinitionRegistry;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 
-import com.douglei.orm.context.TransactionAnnotationScanner;
 import com.douglei.orm.context.TransactionComponentEntity;
+import com.douglei.orm.context.TransactionScanner;
 
 /**
  * 事物组件注册到Spring
@@ -22,10 +20,9 @@ public class TransactionComponentRegister2Spring {
 	 * @param scanAll
 	 * @param transactionComponentPackages
 	 */
-	protected void register2Spring(BeanDefinitionRegistry registry, boolean scanAll, String[] transactionComponentPackages) {
-		List<TransactionComponentEntity> transactionComponentEntities = TransactionAnnotationScanner.scan(scanAll, transactionComponentPackages);
+	protected void register2Spring(BeanDefinitionRegistry registry, boolean scanAll, String[] packages) {
 		GenericBeanDefinition definition = null;
-		for (TransactionComponentEntity entity : transactionComponentEntities) {
+		for (TransactionComponentEntity entity : TransactionScanner.scan(scanAll, packages)) {
 			logger.debug("注册事物组件代理实体: {}", entity);
 			
 			definition = new GenericBeanDefinition();

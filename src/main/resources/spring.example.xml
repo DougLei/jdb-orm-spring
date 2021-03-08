@@ -21,13 +21,13 @@
 	
 	<!-- 非必须配置, 多数据源也需要配置com.douglei.orm.spring.ConfigurationEntity, 配置的方式和上面一致 -->
 	<bean id="multiConfiguration1" class="com.douglei.orm.spring.ConfigurationEntity" scope="prototype">
-		<property name="configurationFile" value="xxxx.xml"></property><!-- 必须配置 -->
+		<property name="filepath" value="xxxx.xml"></property><!-- 必须配置, 基于java resource -->
 		<property name="dataSource" ref="dataSource"></property><!-- 可以不配置, 在jdb-orm中配置数据源 -->
 		<property name="mappingContainer" ref="redisTemplateContainer"></property><!-- 可以不配置 -->
 	</bean>
 	
 	<!-- SessionFactoryRegister -->
-	<bean id="sessionFactoryHandlerHolder" class="com.douglei.orm.spring.SessionFactoryRegister" scope="singleton"><!-- 必须配置 -->
+	<bean id="sessionFactoryRegister" class="com.douglei.orm.spring.SessionFactoryRegister" scope="singleton"><!-- 必须配置 -->
 		<property name="defaultSessionFactory" ref="defaultConfiguration"></property><!-- 必须配置 -->
 		
 		<!-- 配置多数据源, 非必须配置 -->

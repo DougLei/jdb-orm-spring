@@ -16,7 +16,7 @@ public class SessionFactoryRegister {
 	 * @throws IdRepeatedException 
 	 */
 	public void setDefaultSessionFactory(ConfigurationEntity entity) throws IdRepeatedException {
-		SessionFactoryContainer.getSingleton().registerByFile(entity.getConfigurationFile(), entity.getDataSource(), entity.getMappingContainer());
+		SessionFactoryContainer.getSingleton().registerByFile(entity.getFilepath(), entity.getDataSource(), entity.getMappingContainer());
 	}
 	
 	/**
@@ -27,7 +27,7 @@ public class SessionFactoryRegister {
 	public void setSessionFactories(ConfigurationEntity... configurations) throws IdRepeatedException {
 		if(configurations.length > 0) {
 			for (ConfigurationEntity configuration : configurations) 
-				SessionFactoryContainer.getSingleton().registerByFile(configuration.getConfigurationFile(), configuration.getDataSource(), configuration.getMappingContainer());
+				SessionFactoryContainer.getSingleton().registerByFile(configuration.getFilepath(), configuration.getDataSource(), configuration.getMappingContainer());
 		}
 	}
 }

@@ -8,15 +8,15 @@ import com.douglei.orm.mapping.MappingContainer;
  * @author DougLei
  */
 public class ConfigurationEntity {
-	private String configurationFile;
+	private String filepath; // 基于java resource
 	private ExternalDataSource dataSource;
 	private MappingContainer mappingContainer;
 	
-	public String getConfigurationFile() {
-		return configurationFile;
+	public String getFilepath() {
+		return filepath;
 	}
-	public void setConfigurationFile(String configurationFile) {
-		this.configurationFile = configurationFile;
+	public void setFilepath(String filepath) {
+		this.filepath = filepath;
 	}
 	public ExternalDataSource getDataSource() {
 		return dataSource;
